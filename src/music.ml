@@ -36,3 +36,13 @@ let rec acc_create_notes (curr_index : int) (piano : piano)
 
 let create_notes (piano : piano) (scale : scale) : notes =
   sorted_note_indexes piano scale |> acc_create_notes 0 piano
+
+let rec generate_seed_helper lst length range : seed =
+  if length = 0 then lst
+  else
+    let n = Random.int range in
+    let lst1 = lst @ [ n ] in
+    generate_seed_helper lst1 (length - 1) range
+
+let generate_seed (length : int) (range : int) : seed =
+  generate_seed_helper [] length range
