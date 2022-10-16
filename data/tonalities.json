@@ -1,18 +1,4 @@
 {
-  "piano": [
-    "C",
-    "Cs",
-    "D",
-    "Ds",
-    "E",
-    "F",
-    "Fs",
-    "G",
-    "Gs",
-    "A",
-    "As",
-    "B"
-  ],
   "tonalities": [
     {
       "name": "major",
