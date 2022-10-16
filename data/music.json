@@ -1,5 +1,5 @@
 {
-  "notes": [
+  "piano": [
     "C",
     "Cs",
     "D",
@@ -13,7 +13,7 @@
     "As",
     "B"
   ],
-  "scales": [
+  "tonalities": [
     {
       "name": "major",
       "steps": [
