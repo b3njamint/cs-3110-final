@@ -5,6 +5,8 @@ type piano = string list
 type notes = string list
 type seed = int list
 
+exception UnknownKey of string
+
 val piano_from_json : Yojson.Basic.t -> piano
 (** [piano_from_json j] is the notes that [j] contains. Requires: [j] is a valid. *)
 
