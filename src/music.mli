@@ -1,8 +1,8 @@
 (** Representation of melody generator. *)
 
 type scale = { key : string; tonality : int list }
-type piano = char list
-type notes = char list
+type piano = string list
+type notes = string list
 type seed = int list
 
 val piano_from_json : Yojson.Basic.t -> piano
