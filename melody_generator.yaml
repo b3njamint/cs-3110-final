@@ -1,0 +1,26 @@
+---
+group:
+  - name: Jennifer Gu 
+    netid: jg2368
+  - name: Benji Tang
+    netid: bt283
+  - name: Sydney Tran
+    netid: sdt35
+  - name: Victoria Zhang
+    netid: vz36
+
+pm:
+  name: Raymond Chang
+  netid: rsc257
+
+# Set to false if you don't want your gallery entry to be public.
+publish: false
+# Pithy title
+title: "The Melody Generator"
+# OK if this is a Cornell Github link, but public gallery viewers won't be able to see it.
+git-repo: "https://github.com/cs3110/textbook"
+# If you have no demo screencast, replace the url string with an empty string ""
+demo-video-url: "TODO"
+# Write a short, attention-grabbing description of your project.
+desc: >
+  Our project is a melody generator. 
