@@ -18,9 +18,10 @@ publish: false
 # Pithy title
 title: "The Melody Generator"
 # OK if this is a Cornell Github link, but public gallery viewers won't be able to see it.
-git-repo: "https://github.com/cs3110/textbook"
+git-repo: "https://github.com/b3njamint/cs-3110-final.git"
 # If you have no demo screencast, replace the url string with an empty string ""
 demo-video-url: "TODO"
 # Write a short, attention-grabbing description of your project.
 desc: >
-  Our project is a melody generator. 
+  Our project is an interactive melody generator. It takes in a tonality and key 
+  and returns a list of notes representing the medlody. 
