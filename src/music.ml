@@ -1,12 +1,22 @@
 open Yojson
 open Yojson.Basic.Util
 
-exception UnknownKey of string
-
 type scale = { key : string; tonality : int list }
 type piano = string list
 type notes = string list
 type seed = int list
+
+exception UnknownKey of string
+
+let rec generate_seed_helper lst length range : seed =
+  if length = 0 then lst
+  else
+    let n = Random.int range in
+    let lst1 = lst @ [ n ] in
+    generate_seed_helper lst1 (length - 1) range
+
+let generate_seed (length : int) (range : int) : seed =
+  generate_seed_helper [] length range
 
 let rec acc_key_to_int (acc : int) (key : string) = function
   | [] -> raise (UnknownKey key)
@@ -14,16 +24,16 @@ let rec acc_key_to_int (acc : int) (key : string) = function
 
 let key_to_int (key : string) (piano : piano) = acc_key_to_int 0 key piano
 
-let rec tonality_to_indexes (key : int) (curr_index : int) = function
+let rec tonality_to_indexes (curr_index : int) = function
   | [] -> []
   | h :: t ->
-      let new_index = (key + curr_index + h) mod 13 in
-      new_index :: tonality_to_indexes 0 new_index t
+      let new_index = (curr_index + h) mod 12 in
+      new_index :: tonality_to_indexes new_index t
 
 let sorted_note_indexes (piano : piano) (scale : scale) : int list =
   scale.tonality
-  |> tonality_to_indexes (key_to_int scale.key piano) 0
-  |> List.sort compare
+  |> tonality_to_indexes (key_to_int scale.key piano)
+  |> List.sort_uniq compare
 
 let rec acc_create_notes (curr_index : int) (piano : piano)
     (sorted_note_indexes : int list) : notes =
@@ -36,13 +46,3 @@ let rec acc_create_notes (curr_index : int) (piano : piano)
 
 let create_notes (piano : piano) (scale : scale) : notes =
   sorted_note_indexes piano scale |> acc_create_notes 0 piano
-
-let rec generate_seed_helper lst length range : seed =
-  if length = 0 then lst
-  else
-    let n = Random.int range in
-    let lst1 = lst @ [ n ] in
-    generate_seed_helper lst1 (length - 1) range
-
-let generate_seed (length : int) (range : int) : seed =
-  generate_seed_helper [] length range
