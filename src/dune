@@ -1,3 +1,4 @@
 (library
  (name music)
+ (public_name Music)
  (libraries yojson ANSITerminal))
