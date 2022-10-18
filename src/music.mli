@@ -15,7 +15,7 @@ val scale_from_json : Yojson.Basic.t -> string -> string -> scale option
 (** [scale_from_json j s k] is Some scale with key [k] and tonality with name [s] in the json file [j] which contains all the different tonalities, if tonality does not exist then None. Requires: [j] is a valid JSON tonalities representation. *)
 
 val generate_seed : int -> int -> seed
-(** [generate_seed r l] is a list of random indexes of length [l] from range [0..r - 1]. *)
+(** [generate_seed l r] is a list of random indexes of length [l] from range [0..r - 1]. *)
 
 val create_notes : piano -> scale -> notes
 (** [create_notes p s] are the possible notes to randomly choose from based on scale [s] and piano [p]. *)
