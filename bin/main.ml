@@ -12,21 +12,15 @@ let scale (name : string) (key : string) =
 
 let rec rec_get_valid_length (length : int) : int =
   if not (length > 0) then (
-    print_endline
+    ANSITerminal.print_string [ ANSITerminal.red ]
       ("\nEntered length: " ^ string_of_int length ^ " is not valid length.\n");
-    print_endline "\nPlease enter length of melody.";
-    print_string "> ";
+    ANSITerminal.print_string [ ANSITerminal.blue ]
+      "\nPlease enter length of melody.\n";
+    print_string "\n> ";
     match read_line () with
     | exception End_of_file -> rec_get_valid_length 0
     | entered_length -> rec_get_valid_length (int_of_string entered_length))
   else length
-
-let get_valid_length =
-  print_endline "\nPlease enter length of melody.";
-  print_string "> ";
-  match read_line () with
-  | exception End_of_file -> rec_get_valid_length 0
-  | entered_length -> rec_get_valid_length (int_of_string entered_length)
 
 let rec is_valid_key (key : string) = function
   | [] -> false
@@ -34,38 +28,35 @@ let rec is_valid_key (key : string) = function
 
 let rec rec_get_valid_key (key : string) : string =
   if not (is_valid_key key piano) then (
-    print_endline ("\nEntered key: " ^ key ^ " is not valid key.\n");
-    print_endline "\nPlease enter key of melody.";
-    print_string "> ";
+    ANSITerminal.print_string [ ANSITerminal.red ]
+      ("\nEntered key: " ^ key ^ " is not valid key.\n");
+    ANSITerminal.print_string [ ANSITerminal.blue ]
+      "\nPlease enter key of melody.\n";
+    print_string "\n> ";
     match read_line () with
     | exception End_of_file -> rec_get_valid_key ""
     | entered_key -> rec_get_valid_key entered_key)
   else key
-
-let get_valid_key =
-  print_endline "\nPlease enter key of melody.";
-  print_string "> ";
-  match read_line () with
-  | exception End_of_file -> rec_get_valid_key ""
-  | entered_key -> rec_get_valid_key entered_key
 
 let rec is_valid_scale_name (name : string) (key : string) =
   match scale name key with None -> false | Some s -> true
 
 let rec rec_get_valid_scale_name (name : string) (key : string) : string =
   if not (is_valid_scale_name name key) then (
-    print_endline
+    ANSITerminal.print_string [ ANSITerminal.red ]
       ("\nEntered tonality name: " ^ name ^ " is not valid tonality name.\n");
-    print_endline "\nPlease enter tonality of melody.";
-    print_string "> ";
+    ANSITerminal.print_string [ ANSITerminal.blue ]
+      "\nPlease enter tonality of melody.\n";
+    print_string "\n> ";
     match read_line () with
     | exception End_of_file -> rec_get_valid_scale_name "" key
     | entered_name -> rec_get_valid_scale_name entered_name key)
   else name
 
 let get_valid_scale_name (key : string) =
-  print_endline "\nPlease enter tonality of melody.";
-  print_string "> ";
+  ANSITerminal.print_string [ ANSITerminal.blue ]
+    "\nPlease enter tonality of melody.\n";
+  print_string "\n> ";
   match read_line () with
   | exception End_of_file -> rec_get_valid_scale_name "" key
   | entered_name -> rec_get_valid_scale_name entered_name key
@@ -75,24 +66,37 @@ let get_valid_scale (key : string) =
   match scale scale_name key with None -> exit 1 | Some s -> s
 
 let rec print_melody = function
-  | [] -> exit 0
+  | [] ->
+      print_endline "\n";
+      exit 0
   | h :: t ->
-      print_string (h ^ " ");
+      ANSITerminal.print_string [ ANSITerminal.green ] (h ^ " ");
       print_melody t
 
-let play_melody =
-  let length = get_valid_length in
-  let key = get_valid_key in
+let main () =
+  ANSITerminal.print_string [ ANSITerminal.green ]
+    "\n\nWelcome to the melody generator!\n";
+  let key =
+    ANSITerminal.print_string [ ANSITerminal.blue ]
+      "\nPlease enter key of melody.\n";
+    print_string "\n> ";
+    match read_line () with
+    | exception End_of_file -> rec_get_valid_key ""
+    | entered_key -> rec_get_valid_key entered_key
+  in
   let scale = get_valid_scale key in
+  let length =
+    ANSITerminal.print_string [ ANSITerminal.blue ]
+      "\nPlease enter length of melody.\n";
+    print_string "\n> ";
+    match read_line () with
+    | exception End_of_file -> rec_get_valid_length 0
+    | entered_length -> rec_get_valid_length (int_of_string entered_length)
+  in
   let notes = create_notes piano scale in
   let seed = generate_seed length (List.length notes) in
   let melody = create_melody notes seed in
-  print_endline "\nMelody:";
+  ANSITerminal.print_string [ ANSITerminal.green ] "\nMelody: ";
   print_melody melody
-
-let main () =
-  ANSITerminal.print_string [ ANSITerminal.blue ]
-    "\n\nWelcome to the melody generator.\n";
-  play_melody
 
 let () = main ()
