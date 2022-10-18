@@ -33,6 +33,16 @@ let create_notes_test (name : string) (input_piano : piano)
     (create_notes input_piano input_scale)
     ~printer:(pp_list pp_string)
 
+(** [create_melody_test name input_notes input_seed] constructs an OUnit test
+    named [name] that asserts the quality of [expected_output] with
+    [create_melody input_notes input_seed]. *)
+let create_melody_test (name : string) (input_notes : notes) (input_seed : seed)
+    (expected_output : string list) : test =
+  name >:: fun _ ->
+  assert_equal expected_output
+    (create_melody input_notes input_seed)
+    ~printer:(pp_list pp_string)
+
 let music_tests =
   [
     create_notes_test "c major" piano
@@ -77,6 +87,39 @@ let music_tests =
     create_notes_test "f minor" piano
       { key = "F"; tonality = minor }
       [ "C"; "Cs"; "Ds"; "F"; "G"; "Gs"; "As" ];
+    create_melody_test "basic c major melody"
+      [ "C"; "D"; "E"; "F"; "G"; "A"; "B" ]
+      [ 0; 1; 2; 3; 4; 5; 6; 0; 1; 2; 3; 4; 5; 6 ]
+      [ "C"; "D"; "E"; "F"; "G"; "A"; "B"; "C"; "D"; "E"; "F"; "G"; "A"; "B" ];
+    create_melody_test "random c major melody"
+      [ "C"; "D"; "E"; "F"; "G"; "A"; "B" ]
+      [ 6; 4; 3; 5; 1; 3; 0; 2; 3; 3; 4; 6; 1; 5 ]
+      [ "B"; "G"; "F"; "A"; "D"; "F"; "C"; "E"; "F"; "F"; "G"; "B"; "D"; "A" ];
+    create_melody_test "basic b minor melody"
+      [ "Cs"; "D"; "E"; "Fs"; "G"; "A"; "B" ]
+      [ 0; 1; 2; 3; 4; 5; 6; 0; 1; 2; 3; 4; 5; 6 ]
+      [
+        "Cs"; "D"; "E"; "Fs"; "G"; "A"; "B"; "Cs"; "D"; "E"; "Fs"; "G"; "A"; "B";
+      ];
+    create_melody_test "random b minor melody"
+      [ "Cs"; "D"; "E"; "Fs"; "G"; "A"; "B" ]
+      [ 3; 4; 6; 5; 1; 2; 0; 0; 1; 3; 5; 6; 1; 3 ]
+      [
+        "Fs";
+        "G";
+        "B";
+        "A";
+        "D";
+        "E";
+        "Cs";
+        "Cs";
+        "D";
+        "Fs";
+        "A";
+        "B";
+        "D";
+        "Fs";
+      ];
   ]
 
 let suite = "test suite for A2" >::: List.flatten [ music_tests ]
