@@ -1,7 +1,7 @@
 open OUnit2
 open Music
 
-let piano = [ "C"; "Cs"; "D"; "Ds"; "E"; "F"; "Fs"; "G"; "Gs"; "A"; "As"; "B" ]
+let piano = [ "C"; "C#"; "D"; "D#"; "E"; "F"; "F#"; "G"; "G#"; "A"; "A#"; "B" ]
 let major = [ 0; 2; 2; 1; 2; 2; 2; 1 ]
 let minor = [ 0; 2; 1; 2; 2; 1; 2; 2 ]
 
@@ -90,43 +90,43 @@ let music_tests =
       [ "C"; "D"; "E"; "F"; "G"; "A"; "B" ];
     create_notes_test "g major" piano
       { key = "G"; steps = major }
-      [ "C"; "D"; "E"; "Fs"; "G"; "A"; "B" ];
+      [ "C"; "D"; "E"; "F#"; "G"; "A"; "B" ];
     create_notes_test "d major" piano
       { key = "D"; steps = major }
-      [ "Cs"; "D"; "E"; "Fs"; "G"; "A"; "B" ];
+      [ "C#"; "D"; "E"; "F#"; "G"; "A"; "B" ];
     create_notes_test "a major" piano
       { key = "A"; steps = major }
-      [ "Cs"; "D"; "E"; "Fs"; "Gs"; "A"; "B" ];
+      [ "C#"; "D"; "E"; "F#"; "G#"; "A"; "B" ];
     create_notes_test "e major" piano
       { key = "E"; steps = major }
-      [ "Cs"; "Ds"; "E"; "Fs"; "Gs"; "A"; "B" ];
+      [ "C#"; "D#"; "E"; "F#"; "G#"; "A"; "B" ];
     create_notes_test "b major" piano
       { key = "B"; steps = major }
-      [ "Cs"; "Ds"; "E"; "Fs"; "Gs"; "As"; "B" ];
+      [ "C#"; "D#"; "E"; "F#"; "G#"; "A#"; "B" ];
     create_notes_test "f major" piano
       { key = "F"; steps = major }
-      [ "C"; "D"; "E"; "F"; "G"; "A"; "As" ];
+      [ "C"; "D"; "E"; "F"; "G"; "A"; "A#" ];
     create_notes_test "a minor" piano
       { key = "A"; steps = minor }
       [ "C"; "D"; "E"; "F"; "G"; "A"; "B" ];
     create_notes_test "e minor" piano
       { key = "E"; steps = minor }
-      [ "C"; "D"; "E"; "Fs"; "G"; "A"; "B" ];
+      [ "C"; "D"; "E"; "F#"; "G"; "A"; "B" ];
     create_notes_test "b minor" piano
       { key = "B"; steps = minor }
-      [ "Cs"; "D"; "E"; "Fs"; "G"; "A"; "B" ];
+      [ "C#"; "D"; "E"; "F#"; "G"; "A"; "B" ];
     create_notes_test "d minor" piano
       { key = "D"; steps = minor }
-      [ "C"; "D"; "E"; "F"; "G"; "A"; "As" ];
+      [ "C"; "D"; "E"; "F"; "G"; "A"; "A#" ];
     create_notes_test "g minor" piano
       { key = "G"; steps = minor }
-      [ "C"; "D"; "Ds"; "F"; "G"; "A"; "As" ];
+      [ "C"; "D"; "D#"; "F"; "G"; "A"; "A#" ];
     create_notes_test "c minor" piano
       { key = "C"; steps = minor }
-      [ "C"; "D"; "Ds"; "F"; "G"; "Gs"; "As" ];
+      [ "C"; "D"; "D#"; "F"; "G"; "G#"; "A#" ];
     create_notes_test "f minor" piano
       { key = "F"; steps = minor }
-      [ "C"; "Cs"; "Ds"; "F"; "G"; "Gs"; "As" ];
+      [ "C"; "C#"; "D#"; "F"; "G"; "G#"; "A#" ];
     create_melody_test "basic c major melody"
       [ "C"; "D"; "E"; "F"; "G"; "A"; "B" ]
       [ 0; 1; 2; 3; 4; 5; 6; 0; 1; 2; 3; 4; 5; 6 ]
@@ -136,29 +136,29 @@ let music_tests =
       [ 6; 4; 3; 5; 1; 3; 0; 2; 3; 3; 4; 6; 1; 5 ]
       [ "B"; "G"; "F"; "A"; "D"; "F"; "C"; "E"; "F"; "F"; "G"; "B"; "D"; "A" ];
     create_melody_test "basic b minor melody"
-      [ "Cs"; "D"; "E"; "Fs"; "G"; "A"; "B" ]
+      [ "C#"; "D"; "E"; "F#"; "G"; "A"; "B" ]
       [ 0; 1; 2; 3; 4; 5; 6; 0; 1; 2; 3; 4; 5; 6 ]
       [
-        "Cs"; "D"; "E"; "Fs"; "G"; "A"; "B"; "Cs"; "D"; "E"; "Fs"; "G"; "A"; "B";
+        "C#"; "D"; "E"; "F#"; "G"; "A"; "B"; "C#"; "D"; "E"; "F#"; "G"; "A"; "B";
       ];
     create_melody_test "random b minor melody"
-      [ "Cs"; "D"; "E"; "Fs"; "G"; "A"; "B" ]
+      [ "C#"; "D"; "E"; "F#"; "G"; "A"; "B" ]
       [ 3; 4; 6; 5; 1; 2; 0; 0; 1; 3; 5; 6; 1; 3 ]
       [
-        "Fs";
+        "F#";
         "G";
         "B";
         "A";
         "D";
         "E";
-        "Cs";
-        "Cs";
+        "C#";
+        "C#";
         "D";
-        "Fs";
+        "F#";
         "A";
         "B";
         "D";
-        "Fs";
+        "F#";
       ];
     generate_seed_test_randomness "Randomness of seedLength: 10, range: 10" 10
       10;
