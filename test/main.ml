@@ -44,6 +44,27 @@ let create_notes_test (name : string) (input_piano : piano)
     (create_notes input_piano input_scale)
     ~printer:(pp_list pp_string)
 
+(** [generate_seed_test_randomness name length range] constructs an OUnit test 
+    named [name] that asserts that two generated seeds are not equivalent 
+    if the inputs are the same *)
+let generate_seed_test_randomness (name : string) (length : int) (range : int) :
+    test =
+  name >:: fun _ ->
+  assert (generate_seed length range != generate_seed length range)
+
+(** [generate_seed_test_in_range name length range] contructs an OUnit test
+      named [name] that asserts that the generated seeds are in the range 
+      specified *)
+let generate_seed_test_in_range (name : string) (length : int) (range : int) :
+    test =
+  name >:: fun _ ->
+  let rec check_range lst =
+    match lst with
+    | [] -> assert true
+    | h :: t -> if h < range then check_range t else assert false
+  in
+  check_range (generate_seed length range)
+
 (** [create_melody_test name input_notes input_seed] constructs an OUnit test
     named [name] that asserts the quality of [expected_output] with
     [create_melody input_notes input_seed]. *)
@@ -139,6 +160,13 @@ let music_tests =
         "D";
         "Fs";
       ];
+    generate_seed_test_randomness "Randomness of seedLength: 10, range: 10" 10
+      10;
+    generate_seed_test_randomness "Randomness of seed: Length: 10, range: 10" 10
+      10;
+    generate_seed_test_in_range "In range seeds: Length: 5, range: 7" 5 7;
+    generate_seed_test_in_range "In range seeds: Length: 6, range: 100" 6 100;
+    generate_seed_test_in_range "In range seeds: Length: 9, range: 50" 6 50;
   ]
 
 let suite =
