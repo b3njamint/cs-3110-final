@@ -57,54 +57,54 @@ let create_melody_test (name : string) (input_notes : notes) (input_seed : seed)
 let music_json_tests =
   [
     scale_from_json_test "test c major" ton "major" "C"
-      { key = "C"; tonality = [ 0; 2; 2; 1; 2; 2; 2; 1 ] };
+      { key = "C"; steps = [ 0; 2; 2; 1; 2; 2; 2; 1 ] };
     scale_from_json_test "test a natural_minor" ton "natural_minor" "A"
-      { key = "A"; tonality = [ 0; 2; 1; 2; 2; 1; 2; 2 ] };
+      { key = "A"; steps = [ 0; 2; 1; 2; 2; 1; 2; 2 ] };
   ]
 
 let music_tests =
   [
     create_notes_test "c major" piano
-      { key = "C"; tonality = major }
+      { key = "C"; steps = major }
       [ "C"; "D"; "E"; "F"; "G"; "A"; "B" ];
     create_notes_test "g major" piano
-      { key = "G"; tonality = major }
+      { key = "G"; steps = major }
       [ "C"; "D"; "E"; "Fs"; "G"; "A"; "B" ];
     create_notes_test "d major" piano
-      { key = "D"; tonality = major }
+      { key = "D"; steps = major }
       [ "Cs"; "D"; "E"; "Fs"; "G"; "A"; "B" ];
     create_notes_test "a major" piano
-      { key = "A"; tonality = major }
+      { key = "A"; steps = major }
       [ "Cs"; "D"; "E"; "Fs"; "Gs"; "A"; "B" ];
     create_notes_test "e major" piano
-      { key = "E"; tonality = major }
+      { key = "E"; steps = major }
       [ "Cs"; "Ds"; "E"; "Fs"; "Gs"; "A"; "B" ];
     create_notes_test "b major" piano
-      { key = "B"; tonality = major }
+      { key = "B"; steps = major }
       [ "Cs"; "Ds"; "E"; "Fs"; "Gs"; "As"; "B" ];
     create_notes_test "f major" piano
-      { key = "F"; tonality = major }
+      { key = "F"; steps = major }
       [ "C"; "D"; "E"; "F"; "G"; "A"; "As" ];
     create_notes_test "a minor" piano
-      { key = "A"; tonality = minor }
+      { key = "A"; steps = minor }
       [ "C"; "D"; "E"; "F"; "G"; "A"; "B" ];
     create_notes_test "e minor" piano
-      { key = "E"; tonality = minor }
+      { key = "E"; steps = minor }
       [ "C"; "D"; "E"; "Fs"; "G"; "A"; "B" ];
     create_notes_test "b minor" piano
-      { key = "B"; tonality = minor }
+      { key = "B"; steps = minor }
       [ "Cs"; "D"; "E"; "Fs"; "G"; "A"; "B" ];
     create_notes_test "d minor" piano
-      { key = "D"; tonality = minor }
+      { key = "D"; steps = minor }
       [ "C"; "D"; "E"; "F"; "G"; "A"; "As" ];
     create_notes_test "g minor" piano
-      { key = "G"; tonality = minor }
+      { key = "G"; steps = minor }
       [ "C"; "D"; "Ds"; "F"; "G"; "A"; "As" ];
     create_notes_test "c minor" piano
-      { key = "C"; tonality = minor }
+      { key = "C"; steps = minor }
       [ "C"; "D"; "Ds"; "F"; "G"; "Gs"; "As" ];
     create_notes_test "f minor" piano
-      { key = "F"; tonality = minor }
+      { key = "F"; steps = minor }
       [ "C"; "Cs"; "Ds"; "F"; "G"; "Gs"; "As" ];
     create_melody_test "basic c major melody"
       [ "C"; "D"; "E"; "F"; "G"; "A"; "B" ]

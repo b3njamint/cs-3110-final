@@ -1,9 +1,9 @@
 open Yojson
 open Yojson.Basic.Util
 
-type scale = { key : string; tonality : int list }
+type scale = { key : string; steps : int list }
 type tonality = { name : string; steps : int list }
-type t = { tonalities : tonality list }
+type tonalities = { tonalities : tonality list }
 type piano = string list
 type notes = string list
 type seed = int list
@@ -33,11 +33,11 @@ let scale_names json =
   |> List.rev
 
 let scale_from_json json scale key =
-  let tonalities_parsed = tonalities_from_json json in
+  let found_tonalities = tonalities_from_json json in
   let found_scale =
-    List.find (fun a -> a.name = scale) tonalities_parsed.tonalities
+    List.find (fun a -> a.name = scale) found_tonalities.tonalities
   in
-  { key; tonality = found_scale.steps }
+  { key; steps = found_scale.steps }
 
 let rec generate_seed_helper lst length range : seed =
   if length = 0 then lst
@@ -62,7 +62,7 @@ let rec tonality_to_indexes (curr_index : int) = function
       new_index :: tonality_to_indexes new_index t
 
 let sorted_note_indexes (piano : piano) (scale : scale) : int list =
-  scale.tonality
+  scale.steps
   |> tonality_to_indexes (key_to_int scale.key piano)
   |> List.sort_uniq compare
 

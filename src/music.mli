@@ -1,6 +1,6 @@
 (** Representation of melody generator. *)
 
-type scale = { key : string; tonality : int list }
+type scale = { key : string; steps : int list }
 type piano = string list
 type notes = string list
 type seed = int list
