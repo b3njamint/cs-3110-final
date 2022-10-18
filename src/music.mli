@@ -11,8 +11,8 @@ exception BadIndex of int
 val piano_from_json : Yojson.Basic.t -> piano
 (** [piano_from_json j] is the notes that [j] contains. Requires: [j] is a valid. *)
 
-val scale_from_json : Yojson.Basic.t -> string -> string -> scale
-(** [scale_from_json j s k] is the scale with key [k] and tonality with name [s] in the json file [j] which contains all the different tonalities. Requires: [j] is a valid JSON tonalities representation. *)
+val scale_from_json : Yojson.Basic.t -> string -> string -> scale option
+(** [scale_from_json j s k] is Some scale with key [k] and tonality with name [s] in the json file [j] which contains all the different tonalities, if tonality does not exist then None. Requires: [j] is a valid JSON tonalities representation. *)
 
 val generate_seed : int -> int -> seed
 (** [generate_seed r l] is a list of random indexes of length [l] from range [0..r - 1]. *)

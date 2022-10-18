@@ -30,7 +30,7 @@ let ton = Yojson.Basic.from_file (data_dir_prefix ^ "tonalities.json")
     named [name] that asserts the quality of [expected_output] with
     [scale_from_json json scale key]. *)
 let scale_from_json_test (name : string) (json : Yojson.Basic.t)
-    (scale : string) (key : string) (expected_output : scale) : test =
+    (scale : string) (key : string) (expected_output : scale option) : test =
   name >:: fun _ ->
   assert_equal expected_output (scale_from_json json scale key)
 
@@ -57,9 +57,9 @@ let create_melody_test (name : string) (input_notes : notes) (input_seed : seed)
 let music_json_tests =
   [
     scale_from_json_test "test c major" ton "major" "C"
-      { key = "C"; steps = [ 0; 2; 2; 1; 2; 2; 2; 1 ] };
+      (Some { key = "C"; steps = [ 0; 2; 2; 1; 2; 2; 2; 1 ] });
     scale_from_json_test "test a natural_minor" ton "natural_minor" "A"
-      { key = "A"; steps = [ 0; 2; 1; 2; 2; 1; 2; 2 ] };
+      (Some { key = "A"; steps = [ 0; 2; 1; 2; 2; 1; 2; 2 ] });
   ]
 
 let music_tests =

@@ -35,9 +35,11 @@ let scale_names json =
 let scale_from_json json scale key =
   let found_tonalities = tonalities_from_json json in
   let found_scale =
-    List.find (fun a -> a.name = scale) found_tonalities.tonalities
+    List.find_opt (fun a -> a.name = scale) found_tonalities.tonalities
   in
-  { key; steps = found_scale.steps }
+  match found_scale with
+  | None -> None
+  | Some s -> Some { key; steps = s.steps }
 
 let rec generate_seed_helper lst length range : seed =
   if length = 0 then lst
@@ -55,15 +57,15 @@ let rec acc_key_to_int (acc : int) (key : string) = function
 
 let key_to_int (key : string) (piano : piano) = acc_key_to_int 0 key piano
 
-let rec tonality_to_indexes (curr_index : int) = function
+let rec steps_to_indexes (curr_index : int) = function
   | [] -> []
   | h :: t ->
       let new_index = (curr_index + h) mod 12 in
-      new_index :: tonality_to_indexes new_index t
+      new_index :: steps_to_indexes new_index t
 
 let sorted_note_indexes (piano : piano) (scale : scale) : int list =
   scale.steps
-  |> tonality_to_indexes (key_to_int scale.key piano)
+  |> steps_to_indexes (key_to_int scale.key piano)
   |> List.sort_uniq compare
 
 let rec acc_create_notes (curr_index : int) (piano : piano)
