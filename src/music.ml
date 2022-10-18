@@ -49,6 +49,7 @@ let rec generate_seed_helper lst length range : seed =
     generate_seed_helper lst1 (length - 1) range
 
 let generate_seed (length : int) (range : int) : seed =
+  Random.self_init ();
   generate_seed_helper [] length range
 
 let rec acc_key_to_int (acc : int) (key : string) = function
