@@ -6,6 +6,7 @@ type notes = string list
 type seed = int list
 
 exception UnknownKey of string
+exception BadIndex of int
 
 val piano_from_json : Yojson.Basic.t -> piano
 (** [piano_from_json j] is the notes that [j] contains. Requires: [j] is a valid. *)
@@ -19,5 +20,5 @@ val generate_seed : int -> int -> seed
 val create_notes : piano -> scale -> notes
 (** [create_notes p s] are the possible notes to randomly choose from based on scale [s] and piano [p]. *)
 
-val create_melody : notes -> seed -> char list
+val create_melody : notes -> seed -> string list
 (** [create_melody notes indexes] is the melody created from the notes and the list of random indexes. *)

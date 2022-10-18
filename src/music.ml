@@ -7,6 +7,13 @@ type notes = string list
 type seed = int list
 
 exception UnknownKey of string
+exception BadIndex of int
+
+let piano_from_json (j : Yojson.Basic.t) : piano = failwith "todo"
+
+let scale_from_json (j : Yojson.Basic.t) (scale : string) (key : string) : scale
+    =
+  failwith "todo"
 
 let rec generate_seed_helper lst length range : seed =
   if length = 0 then lst
@@ -46,3 +53,16 @@ let rec acc_create_notes (curr_index : int) (piano : piano)
 
 let create_notes (piano : piano) (scale : scale) : notes =
   sorted_note_indexes piano scale |> acc_create_notes 0 piano
+
+let rec find_note (notes : notes) (notes_index : int) (curr_index : int) :
+    string =
+  match notes with
+  | [] -> raise (BadIndex notes_index)
+  | h :: t ->
+      if notes_index = curr_index then h
+      else find_note t notes_index (curr_index + 1)
+
+let rec create_melody (notes : notes) (seed : seed) : string list =
+  match seed with
+  | [] -> []
+  | h :: t -> find_note notes h 0 :: create_melody notes t
