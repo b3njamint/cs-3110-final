@@ -2,6 +2,8 @@ open Yojson
 open Yojson.Basic.Util
 
 type scale = { key : string; tonality : int list }
+type tonality = { name : string; steps : int list }
+type t = { tonalities : tonality list }
 type piano = string list
 type notes = string list
 type seed = int list
@@ -9,11 +11,33 @@ type seed = int list
 exception UnknownKey of string
 exception BadIndex of int
 
-let piano_from_json (j : Yojson.Basic.t) : piano = failwith "todo"
+let piano_from_json json =
+  json |> member "piano" |> to_list |> List.map to_string
 
-let scale_from_json (j : Yojson.Basic.t) (scale : string) (key : string) : scale
-    =
-  failwith "todo"
+let tonality_of_json json =
+  {
+    name = json |> member "name" |> to_string;
+    steps = json |> member "steps" |> to_list |> List.map to_int;
+  }
+
+let tonalities_from_json json =
+  {
+    tonalities =
+      json |> member "tonalities" |> to_list |> List.map tonality_of_json;
+  }
+
+let scale_names json =
+  List.fold_left
+    (fun acc elt -> if List.mem elt.name acc then acc else elt.name :: acc)
+    [] json.tonalities
+  |> List.rev
+
+let scale_from_json json scale key =
+  let tonalities_parsed = tonalities_from_json json in
+  let found_scale =
+    List.find (fun a -> a.name = scale) tonalities_parsed.tonalities
+  in
+  { key; tonality = found_scale.steps }
 
 let rec generate_seed_helper lst length range : seed =
   if length = 0 then lst

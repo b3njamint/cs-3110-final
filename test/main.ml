@@ -23,6 +23,17 @@ let pp_list pp_elt lst =
   in
   "[" ^ pp_elts lst ^ "]"
 
+let data_dir_prefix = "data" ^ Filename.dir_sep
+let ton = Yojson.Basic.from_file (data_dir_prefix ^ "tonalities.json")
+
+(** [scale_from_json_test name json scale key expected_output] constructs an OUnit test
+    named [name] that asserts the quality of [expected_output] with
+    [scale_from_json json scale key]. *)
+let scale_from_json_test (name : string) (json : Yojson.Basic.t)
+    (scale : string) (key : string) (expected_output : scale) : test =
+  name >:: fun _ ->
+  assert_equal expected_output (scale_from_json json scale key)
+
 (** [create_notes_test name input_piano input_scale] constructs an OUnit test
     named [name] that asserts the quality of [expected_output] with
     [create_notes input_piano input_scale]. *)
@@ -42,6 +53,14 @@ let create_melody_test (name : string) (input_notes : notes) (input_seed : seed)
   assert_equal expected_output
     (create_melody input_notes input_seed)
     ~printer:(pp_list pp_string)
+
+let music_json_tests =
+  [
+    scale_from_json_test "test c major" ton "major" "C"
+      { key = "C"; tonality = [ 0; 2; 2; 1; 2; 2; 2; 1 ] };
+    scale_from_json_test "test a natural_minor" ton "natural_minor" "A"
+      { key = "A"; tonality = [ 0; 2; 1; 2; 2; 1; 2; 2 ] };
+  ]
 
 let music_tests =
   [
@@ -122,5 +141,7 @@ let music_tests =
       ];
   ]
 
-let suite = "test suite for A2" >::: List.flatten [ music_tests ]
+let suite =
+  "test suite for A2" >::: List.flatten [ music_tests; music_json_tests ]
+
 let _ = run_test_tt_main suite
