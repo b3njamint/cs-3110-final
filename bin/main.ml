@@ -82,7 +82,9 @@ let main () =
     print_string "\n> ";
     match read_line () with
     | exception End_of_file -> rec_get_valid_key ""
-    | entered_key -> entered_key |> String.uppercase_ascii |> rec_get_valid_key
+    | entered_key ->
+        entered_key |> String.trim |> String.uppercase_ascii
+        |> rec_get_valid_key
   in
   let scale = get_valid_scale key in
   let length =
