@@ -52,6 +52,8 @@ let segment_from_json json is_beg : seed =
     let ind = Random.int (List.length patterns - 1) in
     List.nth patterns ind |> List.map to_int
 
+(** [generate_seed_helper lst length range] is a list of [length] of random ints
+    within [0..range-1]. *)
 let rec generate_seed_helper lst length range : seed =
   if length = 0 then lst
   else
@@ -63,23 +65,31 @@ let generate_seed (length : int) (range : int) : seed =
   Random.self_init ();
   generate_seed_helper [] length range
 
+(** [acc_key_to_int acc key lst] finds the index of the [key] in [lst]. *)
 let rec acc_key_to_int (acc : int) (key : string) = function
   | [] -> raise (UnknownKey key)
   | h :: t -> if String.equal h key then acc else acc_key_to_int (acc + 1) key t
 
+(** [key_to_int key piano] is the index of the [key] in [piano]. *)
 let key_to_int (key : string) (piano : piano) = acc_key_to_int 0 key piano
 
+(** [steps_to_indexes curr_index lst] is the list of note indexes based on 
+    [lst] aka the scale steps. *)
 let rec steps_to_indexes (curr_index : int) = function
   | [] -> []
   | h :: t ->
       let new_index = (curr_index + h) mod 12 in
       new_index :: steps_to_indexes new_index t
 
+(** [sorted_note_indexes piano scale] is the list of sorted note indexes based 
+    on the [scale]. *)
 let sorted_note_indexes (piano : piano) (scale : scale) : int list =
   scale.steps
   |> steps_to_indexes (key_to_int scale.key piano)
   |> List.sort_uniq compare
 
+(** [acc_create_notes curr_index piano sorted_note_indexes] is the list of notes
+    that corresponds to the notes in [piano] at [sorted_note_indexes]. *)
 let rec acc_create_notes (curr_index : int) (piano : piano)
     (sorted_note_indexes : int list) : notes =
   match (piano, sorted_note_indexes) with
@@ -92,13 +102,12 @@ let rec acc_create_notes (curr_index : int) (piano : piano)
 let create_notes (piano : piano) (scale : scale) : notes =
   sorted_note_indexes piano scale |> acc_create_notes 0 piano
 
-let rec find_note (notes : notes) (notes_index : int) (curr_index : int) :
-    string =
+(** [find_note notes index curr_index] is the note in [notes] at [index]. *)
+let rec find_note (notes : notes) (index : int) (curr_index : int) : string =
   match notes with
-  | [] -> raise (BadIndex notes_index)
+  | [] -> raise (BadIndex index)
   | h :: t ->
-      if notes_index = curr_index then h
-      else find_note t notes_index (curr_index + 1)
+      if index = curr_index then h else find_note t index (curr_index + 1)
 
 let rec create_melody (notes : notes) (seed : seed) : string list =
   match seed with
