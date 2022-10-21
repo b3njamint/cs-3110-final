@@ -5,17 +5,24 @@ let create_file_name (name : string) =
 
 let piano_file = create_file_name "piano"
 let tonalities_file = create_file_name "tonalities"
+let segments_file = create_file_name "segments"
 let piano = piano_from_json (Yojson.Basic.from_file piano_file)
 
 let scale (name : string) (key : string) =
   scale_from_json (Yojson.Basic.from_file tonalities_file) name key
 
+let random_beginning =
+  segment_from_json (Yojson.Basic.from_file segments_file) true
+
+let random_ending =
+  segment_from_json (Yojson.Basic.from_file segments_file) false
+
 let rec rec_get_valid_length (length : int) : int =
-  if not (length > 0) then (
+  if not (length >= 10) then (
     ANSITerminal.print_string [ ANSITerminal.red ]
       ("\nEntered length: " ^ string_of_int length ^ " is not valid length.\n");
     ANSITerminal.print_string [ ANSITerminal.blue ]
-      "\nPlease enter length of melody.\n";
+      "\nPlease enter length of melody (at least 10).\n";
     print_string "\n> ";
     match read_line () with
     | exception End_of_file -> rec_get_valid_length 0
@@ -89,14 +96,18 @@ let main () =
   let scale = get_valid_scale key in
   let length =
     ANSITerminal.print_string [ ANSITerminal.blue ]
-      "\nPlease enter length of melody.\n";
+      "\nPlease enter length of melody (at least 10).\n";
     print_string "\n> ";
     match read_line () with
     | exception End_of_file -> rec_get_valid_length 0
     | entered_length -> rec_get_valid_length (int_of_string entered_length)
   in
   let notes = create_notes piano scale in
-  let seed = generate_seed length (List.length notes) in
+  let mid_seg_len =
+    length - List.length random_beginning - List.length random_ending
+  in
+  let mid_seed = generate_seed mid_seg_len (List.length notes) in
+  let seed = random_beginning @ mid_seed @ random_ending in
   let melody = create_melody notes seed in
   ANSITerminal.print_string [ ANSITerminal.green ] "\nMelody: ";
   print_melody melody

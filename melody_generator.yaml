@@ -1,6 +1,6 @@
 ---
 group:
-  - name: Jennifer Gu 
+  - name: Jennifer Gu
     netid: jg2368
   - name: Benji Tang
     netid: bt283
@@ -13,18 +13,17 @@ pm:
   name: Raymond Chang
   netid: rsc257
 
-# Set to false if you don't want your gallery entry to be public.
 publish: false
-# Pithy title
+
 title: "The Melody Generator"
-# OK if this is a Cornell Github link, but public gallery viewers won't be able to see it.
+
 git-repo: "https://github.com/b3njamint/cs-3110-final.git"
-# If you have no demo screencast, replace the url string with an empty string ""
+
 demo-video-url: ""
-# Write a short, attention-grabbing description of your project.
+
 desc: >
   Our project is an interactive melody generator. It takes in a tonality, key, 
   and the length of the desired melody and returns a list of notes representing 
   the generated melody. Some features that we have include providing the option 
   to set the last three notes to pre-specified indexes that match with the 
-  inputted key in order to generate a "better sounding" melody. 
+  inputted key in order to generate a "better sounding" melody.
