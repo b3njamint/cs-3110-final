@@ -63,7 +63,9 @@ let rec rec_get_valid_scale_name (name : string) (key : string) : string =
     ANSITerminal.print_string [ ANSITerminal.red ]
       ("\nEntered tonality name: " ^ name ^ " is not valid tonality name.\n");
     ANSITerminal.print_string [ ANSITerminal.blue ]
-      "\nPlease enter tonality of melody.\n";
+      "\n\
+       Please enter tonality of melody. Options: major; minor; minor_harmonic\n\
+      \        \n";
     print_string "\n> ";
     match read_line () with
     | exception End_of_file -> rec_get_valid_scale_name "" key

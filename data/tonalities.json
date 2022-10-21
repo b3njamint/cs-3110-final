@@ -14,7 +14,7 @@
       ]
     },
     {
-      "name": "natural_minor",
+      "name": "minor",
       "steps": [
         0,
         2,
@@ -27,7 +27,7 @@
       ]
     },
     {
-      "name": "harmonic_minor",
+      "name": "minor_harmonic",
       "steps": [
         0,
         2,

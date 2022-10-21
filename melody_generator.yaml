@@ -22,8 +22,9 @@ git-repo: "https://github.com/b3njamint/cs-3110-final.git"
 demo-video-url: ""
 
 desc: >
-  Our project is an interactive melody generator. It takes in a tonality, key, 
+  Our project is an interactive melody generator. It takes in a key, tonality, 
   and the length of the desired melody and returns a list of notes representing 
-  the generated melody. Some features that we have include providing the option 
-  to set the last three notes to pre-specified indexes that match with the 
-  inputted key in order to generate a "better sounding" melody.
+  the generated melody. Some features that we have include setting the first few
+  and last few notes to some pre-specified indexes that match with the inputted
+  key in order to generate a "better sounding" melody. GUIs are not supported
+  yet but will be in the future.
