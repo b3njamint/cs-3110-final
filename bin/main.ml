@@ -18,11 +18,11 @@ let random_ending =
   segment_from_json (Yojson.Basic.from_file segments_file) false
 
 let rec rec_get_valid_length (length : int) : int =
-  if not (length > 0) then (
+  if not (length >= 10) then (
     ANSITerminal.print_string [ ANSITerminal.red ]
       ("\nEntered length: " ^ string_of_int length ^ " is not valid length.\n");
     ANSITerminal.print_string [ ANSITerminal.blue ]
-      "\nPlease enter length of melody.\n";
+      "\nPlease enter length of melody (at least 10).\n";
     print_string "\n> ";
     match read_line () with
     | exception End_of_file -> rec_get_valid_length 0
@@ -96,7 +96,7 @@ let main () =
   let scale = get_valid_scale key in
   let length =
     ANSITerminal.print_string [ ANSITerminal.blue ]
-      "\nPlease enter length of melody.\n";
+      "\nPlease enter length of melody (at least 10).\n";
     print_string "\n> ";
     match read_line () with
     | exception End_of_file -> rec_get_valid_length 0
