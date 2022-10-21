@@ -38,28 +38,6 @@
         3,
         1
       ]
-    },
-    {
-      "name": "major_pentatonic",
-      "steps": [
-        0,
-        2,
-        2,
-        3,
-        2,
-        3
-      ]
-    },
-    {
-      "name": "minor_pentatonic",
-      "steps": [
-        0,
-        3,
-        2,
-        2,
-        3,
-        2
-      ]
     }
   ]
 }
