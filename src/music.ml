@@ -41,6 +41,17 @@ let scale_from_json json scale key =
   | None -> None
   | Some s -> Some { key; steps = s.steps }
 
+let segment_from_json json is_beg : seed =
+  Random.self_init ();
+  if is_beg then
+    let patterns = json |> member "beginnings" |> to_list |> List.map to_list in
+    let ind = Random.int (List.length patterns - 1) in
+    List.nth patterns ind |> List.map to_int
+  else
+    let patterns = json |> member "endings" |> to_list |> List.map to_list in
+    let ind = Random.int (List.length patterns - 1) in
+    List.nth patterns ind |> List.map to_int
+
 let rec generate_seed_helper lst length range : seed =
   if length = 0 then lst
   else
