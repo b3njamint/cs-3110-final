@@ -14,7 +14,7 @@
       ]
     },
     {
-      "name": "natural_minor",
+      "name": "minor",
       "steps": [
         0,
         2,
@@ -27,7 +27,7 @@
       ]
     },
     {
-      "name": "harmonic_minor",
+      "name": "minor_harmonic",
       "steps": [
         0,
         2,
@@ -37,6 +37,28 @@
         1,
         3,
         1
+      ]
+    },
+    {
+      "name": "major_pentatonic",
+      "steps": [
+        0,
+        2,
+        2,
+        3,
+        2,
+        3
+      ]
+    },
+    {
+      "name": "minor_pentatonic",
+      "steps": [
+        0,
+        3,
+        2,
+        2,
+        3,
+        2
       ]
     }
   ]
