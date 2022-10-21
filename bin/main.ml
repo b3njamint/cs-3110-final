@@ -17,6 +17,8 @@ let random_beginning =
 let random_ending =
   segment_from_json (Yojson.Basic.from_file segments_file) false
 
+(** [rec_get_valid_length length] continues to ask for [length] until it is
+    valid. A length is valid if it is greater than or equal to 10. *)
 let rec rec_get_valid_length (length : int) : int =
   if not (length >= 10) then (
     ANSITerminal.print_string [ ANSITerminal.red ]
@@ -29,10 +31,14 @@ let rec rec_get_valid_length (length : int) : int =
     | entered_length -> rec_get_valid_length (int_of_string entered_length))
   else length
 
+(** [is_valid_key key lst] is true if [key] is an element in [lst] and is false 
+    otherwise. *)
 let rec is_valid_key (key : string) = function
   | [] -> false
   | h :: t -> if h = key then true else is_valid_key key t
 
+(** [rec_get_valid_key key] continues to ask for [key] until it is
+    valid. A valid key must cause [is_valid_key key] to be true. *)
 let rec rec_get_valid_key (key : string) : string =
   if not (is_valid_key key piano) then (
     ANSITerminal.print_string [ ANSITerminal.red ]
@@ -45,9 +51,13 @@ let rec rec_get_valid_key (key : string) : string =
     | entered_key -> rec_get_valid_key entered_key)
   else key
 
+(** [is_valid_scale_name name key] is true if [scale name key] is [Some s] 
+    (aka Some scale) and is false otherwise. *)
 let rec is_valid_scale_name (name : string) (key : string) =
   match scale name key with None -> false | Some s -> true
 
+(** [rec_get_valid_scale_name name key] continues to ask for [name] until it is
+    valid. A valid name must cause [is_valid_scale_name name key] to be true. *)
 let rec rec_get_valid_scale_name (name : string) (key : string) : string =
   if not (is_valid_scale_name name key) then (
     ANSITerminal.print_string [ ANSITerminal.red ]
@@ -60,6 +70,8 @@ let rec rec_get_valid_scale_name (name : string) (key : string) : string =
     | entered_name -> rec_get_valid_scale_name entered_name key)
   else name
 
+(** [get_valid_scale_name key] asks for a scale name (aka [entered_name]) and 
+    calls [rec_get_valid_scale_name entered_name key]. *)
 let get_valid_scale_name (key : string) =
   ANSITerminal.print_string [ ANSITerminal.blue ]
     "\nPlease enter tonality of melody.\n";
@@ -68,10 +80,15 @@ let get_valid_scale_name (key : string) =
   | exception End_of_file -> rec_get_valid_scale_name "" key
   | entered_name -> rec_get_valid_scale_name entered_name key
 
+(** [get_valid_scale_name key] calls [get_valid_scale_name key] to get a 
+    [scale_name] and then gets scale of [scale_name] by calling 
+    [scale scale_name key]. *)
 let get_valid_scale (key : string) =
   let scale_name = get_valid_scale_name key in
   match scale scale_name key with None -> exit 1 | Some s -> s
 
+(** [print_melody lst] prints the elements in [lst] with spaces in between and 
+    then exits. *)
 let rec print_melody = function
   | [] ->
       print_endline "\n";
@@ -80,6 +97,8 @@ let rec print_melody = function
       ANSITerminal.print_string [ ANSITerminal.green ] (h ^ " ");
       print_melody t
 
+(** [main] asks user for inputs in terminal and calls functions to create melody
+    based on inputs. *)
 let main () =
   ANSITerminal.print_string [ ANSITerminal.green ]
     "\n\nWelcome to the melody generator!\n";
