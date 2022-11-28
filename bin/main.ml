@@ -48,7 +48,9 @@ let rec rec_get_valid_key (key : string) : string =
     print_string "\n> ";
     match read_line () with
     | exception End_of_file -> rec_get_valid_key ""
-    | entered_key -> rec_get_valid_key entered_key)
+    | entered_key ->
+        entered_key |> String.trim |> String.uppercase_ascii
+        |> rec_get_valid_key)
   else key
 
 (** [is_valid_scale_name name key] is true if [scale name key] is [Some s] 
