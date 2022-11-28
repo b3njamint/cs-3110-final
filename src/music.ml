@@ -1,8 +1,16 @@
 open Yojson
 open Yojson.Basic.Util
 
-type scale = { key : string; steps : int list }
-type tonality = { name : string; steps : int list }
+type scale = {
+  key : string;
+  steps : int list;
+}
+
+type tonality = {
+  name : string;
+  steps : int list;
+}
+
 type tonalities = { tonalities : tonality list }
 type piano = string list
 type notes = string list
@@ -73,15 +81,15 @@ let rec acc_key_to_int (acc : int) (key : string) = function
 (** [key_to_int key piano] is the index of the [key] in [piano]. *)
 let key_to_int (key : string) (piano : piano) = acc_key_to_int 0 key piano
 
-(** [steps_to_indexes curr_index lst] is the list of note indexes based on 
-    [lst] aka the scale steps. *)
+(** [steps_to_indexes curr_index lst] is the list of note indexes based on [lst]
+    aka the scale steps. *)
 let rec steps_to_indexes (curr_index : int) = function
   | [] -> []
   | h :: t ->
       let new_index = (curr_index + h) mod 12 in
       new_index :: steps_to_indexes new_index t
 
-(** [sorted_note_indexes piano scale] is the list of sorted note indexes based 
+(** [sorted_note_indexes piano scale] is the list of sorted note indexes based
     on the [scale]. *)
 let sorted_note_indexes (piano : piano) (scale : scale) : int list =
   scale.steps
