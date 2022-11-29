@@ -75,6 +75,26 @@ let create_melody_test (name : string) (input_notes : notes) (input_seed : seed)
     (create_melody input_notes input_seed)
     ~printer:(pp_list pp_string)
 
+(** [create_chords_test name piano scale expected_output] constructs an OUnit
+    test named [name] that asserts the quality of [expected_output] with
+    [create_chords piano scale]. *)
+let create_chords_test (name : string) (input_piano : piano)
+    (input_scale : scale) (expected_output : string list) : test =
+  name >:: fun _ ->
+  assert_equal expected_output
+    (create_chords input_piano input_scale)
+    ~printer:(pp_list pp_string)
+
+(** [create_left_hand_test name piano expected_output] constructs an OUnit test
+    named [name] that asserts the quality of [expected_output] with
+    [create_left_hand melody chords]. *)
+let create_left_hand_test (name : string) (melody : string list)
+    (chords : string list) (expected_output : string list) : test =
+  name >:: fun _ ->
+  assert_equal expected_output
+    (create_left_hand melody chords)
+    ~printer:(pp_list pp_string)
+
 let music_json_tests =
   [
     scale_from_json_test "test c major" ton "major" "C"
