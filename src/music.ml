@@ -110,6 +110,25 @@ let rec acc_create_notes (curr_index : int) (piano : piano)
 let create_notes (piano : piano) (scale : scale) : notes =
   sorted_note_indexes piano scale |> acc_create_notes 0 piano
 
+let create_single_chord (index : int) (notes : notes) : string =
+  "(" ^ List.nth notes 0 ^ "," ^ List.nth notes 2 ^ "," ^ List.nth notes 2 ^ ")"
+
+let create_chords (piano : piano) (scale : scale) : string list =
+  let notes = create_notes piano scale in
+  let chord_I =
+    "(" ^ List.nth notes 0 ^ "," ^ List.nth notes 2 ^ "," ^ List.nth notes 4
+    ^ ")"
+  in
+  let chord_IV =
+    "(" ^ List.nth notes 3 ^ "," ^ List.nth notes 5 ^ "," ^ List.nth notes 7
+    ^ ")"
+  in
+  let chord_V =
+    "(" ^ List.nth notes 4 ^ "," ^ List.nth notes 7 ^ "," ^ List.nth notes 0
+    ^ ")"
+  in
+  [ chord_I; chord_IV; chord_V ]
+
 (** [find_note notes index curr_index] is the note in [notes] at [index]. *)
 let rec find_note (notes : notes) (index : int) (curr_index : int) : string =
   match notes with
@@ -121,3 +140,9 @@ let rec create_melody (notes : notes) (seed : seed) : string list =
   match seed with
   | [] -> []
   | h :: t -> find_note notes h 0 :: create_melody notes t
+
+let rec create_left_hand (melody : string list) (chords : string list) :
+    string list =
+  match melody with
+  | e1 :: e2 :: e3 :: e4 :: t -> List.nth chords 1 :: create_left_hand t chords
+  | _ -> [ List.nth chords 1 ]

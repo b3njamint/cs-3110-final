@@ -48,7 +48,7 @@ val create_notes : piano -> scale -> notes
 (** [create_notes p s] are the possible notes to randomly choose from based on
     scale [s] and piano [p]. *)
 
-val create_chords : piano -> scale -> notes
+val create_chords : piano -> scale -> string list
 (** [create_chords p s] are the possible chords to randomly choose from based on
     scale [s] and piano [p]. *)
 
@@ -56,6 +56,6 @@ val create_melody : notes -> seed -> string list
 (** [create_melody notes indexes] is the melody created from the notes and the
     list of random indexes. *)
 
-val create_left_hand : notes -> seed -> string list
-(** [create_left_hand notes indexes] is the left hand chords created from the
-    chords and the list of random indexes. *)
+val create_left_hand : string list -> string list -> string list
+(** [create_left_hand m c] is the left hand chords created from the melody [m]
+    and chords [c]. *)

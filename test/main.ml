@@ -26,8 +26,8 @@ let pp_list pp_elt lst =
 let data_dir_prefix = "data" ^ Filename.dir_sep
 let ton = Yojson.Basic.from_file (data_dir_prefix ^ "tonalities.json")
 
-(** [scale_from_json_test name json scale key expected_output] constructs an OUnit test
-    named [name] that asserts the quality of [expected_output] with
+(** [scale_from_json_test name json scale key expected_output] constructs an
+    OUnit test named [name] that asserts the quality of [expected_output] with
     [scale_from_json json scale key]. *)
 let scale_from_json_test (name : string) (json : Yojson.Basic.t)
     (scale : string) (key : string) (expected_output : scale option) : test =
@@ -44,17 +44,17 @@ let create_notes_test (name : string) (input_piano : piano)
     (create_notes input_piano input_scale)
     ~printer:(pp_list pp_string)
 
-(** [generate_seed_test_randomness name length range] constructs an OUnit test 
-    named [name] that asserts that two generated seeds are not equivalent 
-    if the inputs are the same *)
+(** [generate_seed_test_randomness name length range] constructs an OUnit test
+    named [name] that asserts that two generated seeds are not equivalent if the
+    inputs are the same *)
 let generate_seed_test_randomness (name : string) (length : int) (range : int) :
     test =
   name >:: fun _ ->
   assert (generate_seed length range != generate_seed length range)
 
 (** [generate_seed_test_in_range name length range] contructs an OUnit test
-      named [name] that asserts that the generated seeds are in the range 
-      specified *)
+    named [name] that asserts that the generated seeds are in the range
+    specified *)
 let generate_seed_test_in_range (name : string) (length : int) (range : int) :
     test =
   name >:: fun _ ->
