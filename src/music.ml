@@ -146,4 +146,6 @@ let rec create_left_hand (melody : string list) (chords : string list)
   match (melody, seed) with
   | e1 :: e2 :: e3 :: e4 :: t, se :: st ->
       List.nth chords (se mod 3) :: create_left_hand t chords st
+  | _ :: t, se :: st ->
+      List.nth chords (se mod 3) :: create_left_hand t chords st
   | _ -> [ List.nth chords 1 ]
