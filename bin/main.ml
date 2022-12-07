@@ -91,11 +91,11 @@ let get_valid_scale (key : string) =
 
 (** [print_music lst] prints the elements in [lst] with spaces in between and 
     then exits. *)
-let rec print_music = function
+let rec print_music (delim : string) = function
   | [] -> print_endline "\n"
   | h :: t ->
-      ANSITerminal.print_string [ ANSITerminal.yellow ] (h ^ " ");
-      print_music t
+      ANSITerminal.print_string [ ANSITerminal.yellow ] (h ^ delim);
+      print_music delim t
 
 (** [main] asks user for inputs in terminal and calls functions to create melody
     based on inputs. *)
@@ -129,14 +129,14 @@ let main () =
   let seed = random_beginning @ mid_seed @ random_ending in
   let melody = create_melody notes seed in
   ANSITerminal.print_string [ ANSITerminal.green ] "\nMelody: ";
-  print_music melody;
+  print_music " " melody;
   let chords = create_chords piano scale in
   let left_hand = create_left_hand melody chords seed in
   ANSITerminal.print_string [ ANSITerminal.green ] "Chords: ";
-  print_music left_hand;
+  print_music " " left_hand;
   let seed_print = List.map (fun e -> string_of_int e) seed in
-  ANSITerminal.print_string [ ANSITerminal.green ] "\nSeed: ";
-  print_music seed_print;
+  ANSITerminal.print_string [ ANSITerminal.green ] "Seed: ";
+  print_music "" seed_print;
   exit 0
 
 let () = main ()
