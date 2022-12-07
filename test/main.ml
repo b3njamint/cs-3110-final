@@ -99,7 +99,7 @@ let music_json_tests =
   [
     scale_from_json_test "test c major" ton "major" "C"
       (Some { key = "C"; steps = [ 0; 2; 2; 1; 2; 2; 2; 1 ] });
-    scale_from_json_test "test a natural_minor" ton "natural_minor" "A"
+    scale_from_json_test "test a minor" ton "minor" "A"
       (Some { key = "A"; steps = [ 0; 2; 1; 2; 2; 1; 2; 2 ] });
   ]
 
@@ -187,6 +187,9 @@ let music_tests =
     generate_seed_test_in_range "In range seeds: Length: 5, range: 7" 5 7;
     generate_seed_test_in_range "In range seeds: Length: 6, range: 100" 6 100;
     generate_seed_test_in_range "In range seeds: Length: 9, range: 50" 6 50;
+    create_chords_test "chords for random C major melody" piano
+      { key = "C"; steps = major }
+      [ "(C,E,G)"; "(F,A,C)"; "(G,B,D)" ];
   ]
 
 let suite =

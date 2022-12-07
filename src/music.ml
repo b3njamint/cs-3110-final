@@ -120,11 +120,11 @@ let create_chords (piano : piano) (scale : scale) : string list =
     ^ ")"
   in
   let chord_IV =
-    "(" ^ List.nth notes 3 ^ "," ^ List.nth notes 5 ^ "," ^ List.nth notes 7
+    "(" ^ List.nth notes 3 ^ "," ^ List.nth notes 5 ^ "," ^ List.nth notes 0
     ^ ")"
   in
   let chord_V =
-    "(" ^ List.nth notes 4 ^ "," ^ List.nth notes 7 ^ "," ^ List.nth notes 0
+    "(" ^ List.nth notes 4 ^ "," ^ List.nth notes 6 ^ "," ^ List.nth notes 1
     ^ ")"
   in
   [ chord_I; chord_IV; chord_V ]

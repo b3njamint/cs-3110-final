@@ -92,12 +92,20 @@ let get_valid_scale (key : string) =
 (** [print_melody lst] prints the elements in [lst] with spaces in between and 
     then exits. *)
 let rec print_melody = function
+  | [] -> print_endline "\n"
+  | h :: t ->
+      ANSITerminal.print_string [ ANSITerminal.green ] (h ^ " ");
+      print_melody t
+
+(** [print_chords lst] prints the elements in [lst] with spaces in between and 
+    then exits. *)
+let rec print_chords = function
   | [] ->
       print_endline "\n";
       exit 0
   | h :: t ->
       ANSITerminal.print_string [ ANSITerminal.green ] (h ^ " ");
-      print_melody t
+      print_chords t
 
 (** [main] asks user for inputs in terminal and calls functions to create melody
     based on inputs. *)
