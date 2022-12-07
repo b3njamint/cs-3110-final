@@ -28,7 +28,9 @@ let rec rec_get_valid_length (length : int) : int =
     print_string "\n> ";
     match read_line () with
     | exception End_of_file -> rec_get_valid_length 0
-    | entered_length -> rec_get_valid_length (int_of_string entered_length))
+    | entered_length -> (
+        try rec_get_valid_length (int_of_string entered_length)
+        with _ -> rec_get_valid_length ~-1))
   else length
 
 (** [is_valid_key key lst] is true if [key] is an element in [lst] and is false 
@@ -65,7 +67,8 @@ let rec rec_get_valid_scale_name (name : string) (key : string) : string =
     ANSITerminal.print_string [ ANSITerminal.red ]
       ("\nEntered tonality name: " ^ name ^ " is not valid tonality name.\n");
     ANSITerminal.print_string [ ANSITerminal.blue ]
-      "\n(Please enter tonality of melody.\n";
+      "\n\
+       Please enter tonality of melody. Options: major; minor; minor_harmonic.\n";
     print_string "\n> ";
     match read_line () with
     | exception End_of_file -> rec_get_valid_scale_name "" key
@@ -76,7 +79,8 @@ let rec rec_get_valid_scale_name (name : string) (key : string) : string =
     calls [rec_get_valid_scale_name entered_name key]. *)
 let get_valid_scale_name (key : string) =
   ANSITerminal.print_string [ ANSITerminal.blue ]
-    "\nPlease enter tonality of melody. Options: major; minor; minor_harmonic\n";
+    "\n\
+     Please enter tonality of melody. Options: major; minor; minor_harmonic.\n";
   print_string "\n> ";
   match read_line () with
   | exception End_of_file -> rec_get_valid_scale_name "" key
