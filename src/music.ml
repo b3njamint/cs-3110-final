@@ -1,8 +1,16 @@
 open Yojson
 open Yojson.Basic.Util
 
-type scale = { key : string; steps : int list }
-type tonality = { name : string; steps : int list }
+type scale = {
+  key : string;
+  steps : int list;
+}
+
+type tonality = {
+  name : string;
+  steps : int list;
+}
+
 type tonalities = { tonalities : tonality list }
 type piano = string list
 type notes = string list
@@ -73,15 +81,15 @@ let rec acc_key_to_int (acc : int) (key : string) = function
 (** [key_to_int key piano] is the index of the [key] in [piano]. *)
 let key_to_int (key : string) (piano : piano) = acc_key_to_int 0 key piano
 
-(** [steps_to_indexes curr_index lst] is the list of note indexes based on 
-    [lst] aka the scale steps. *)
+(** [steps_to_indexes curr_index lst] is the list of note indexes based on [lst]
+    aka the scale steps. *)
 let rec steps_to_indexes (curr_index : int) = function
   | [] -> []
   | h :: t ->
       let new_index = (curr_index + h) mod 12 in
       new_index :: steps_to_indexes new_index t
 
-(** [sorted_note_indexes piano scale] is the list of sorted note indexes based 
+(** [sorted_note_indexes piano scale] is the list of sorted note indexes based
     on the [scale]. *)
 let sorted_note_indexes (piano : piano) (scale : scale) : int list =
   scale.steps
@@ -102,6 +110,25 @@ let rec acc_create_notes (curr_index : int) (piano : piano)
 let create_notes (piano : piano) (scale : scale) : notes =
   sorted_note_indexes piano scale |> acc_create_notes 0 piano
 
+let create_single_chord (index : int) (notes : notes) : string =
+  "(" ^ List.nth notes 0 ^ "," ^ List.nth notes 2 ^ "," ^ List.nth notes 2 ^ ")"
+
+let create_chords (piano : piano) (scale : scale) : string list =
+  let notes = create_notes piano scale in
+  let chord_I =
+    "(" ^ List.nth notes 0 ^ "," ^ List.nth notes 2 ^ "," ^ List.nth notes 4
+    ^ ")"
+  in
+  let chord_IV =
+    "(" ^ List.nth notes 3 ^ "," ^ List.nth notes 5 ^ "," ^ List.nth notes 0
+    ^ ")"
+  in
+  let chord_V =
+    "(" ^ List.nth notes 4 ^ "," ^ List.nth notes 6 ^ "," ^ List.nth notes 1
+    ^ ")"
+  in
+  [ chord_I; chord_IV; chord_V ]
+
 (** [find_note notes index curr_index] is the note in [notes] at [index]. *)
 let rec find_note (notes : notes) (index : int) (curr_index : int) : string =
   match notes with
@@ -113,3 +140,12 @@ let rec create_melody (notes : notes) (seed : seed) : string list =
   match seed with
   | [] -> []
   | h :: t -> find_note notes h 0 :: create_melody notes t
+
+let rec create_left_hand (melody : string list) (chords : string list)
+    (seed : seed) : string list =
+  match (melody, seed) with
+  | e1 :: e2 :: e3 :: e4 :: t, se :: st ->
+      List.nth chords (se mod 3) :: create_left_hand t chords st
+  | _ :: t, se :: st ->
+      List.nth chords (se mod 3) :: create_left_hand t chords st
+  | _ -> []

@@ -26,8 +26,8 @@ let pp_list pp_elt lst =
 let data_dir_prefix = "data" ^ Filename.dir_sep
 let ton = Yojson.Basic.from_file (data_dir_prefix ^ "tonalities.json")
 
-(** [scale_from_json_test name json scale key expected_output] constructs an OUnit test
-    named [name] that asserts the quality of [expected_output] with
+(** [scale_from_json_test name json scale key expected_output] constructs an
+    OUnit test named [name] that asserts the quality of [expected_output] with
     [scale_from_json json scale key]. *)
 let scale_from_json_test (name : string) (json : Yojson.Basic.t)
     (scale : string) (key : string) (expected_output : scale option) : test =
@@ -44,17 +44,17 @@ let create_notes_test (name : string) (input_piano : piano)
     (create_notes input_piano input_scale)
     ~printer:(pp_list pp_string)
 
-(** [generate_seed_test_randomness name length range] constructs an OUnit test 
-    named [name] that asserts that two generated seeds are not equivalent 
-    if the inputs are the same *)
+(** [generate_seed_test_randomness name length range] constructs an OUnit test
+    named [name] that asserts that two generated seeds are not equivalent if the
+    inputs are the same *)
 let generate_seed_test_randomness (name : string) (length : int) (range : int) :
     test =
   name >:: fun _ ->
   assert (generate_seed length range != generate_seed length range)
 
 (** [generate_seed_test_in_range name length range] contructs an OUnit test
-      named [name] that asserts that the generated seeds are in the range 
-      specified *)
+    named [name] that asserts that the generated seeds are in the range
+    specified *)
 let generate_seed_test_in_range (name : string) (length : int) (range : int) :
     test =
   name >:: fun _ ->
@@ -75,11 +75,31 @@ let create_melody_test (name : string) (input_notes : notes) (input_seed : seed)
     (create_melody input_notes input_seed)
     ~printer:(pp_list pp_string)
 
+(** [create_chords_test name piano scale expected_output] constructs an OUnit
+    test named [name] that asserts the quality of [expected_output] with
+    [create_chords piano scale]. *)
+let create_chords_test (name : string) (input_piano : piano)
+    (input_scale : scale) (expected_output : string list) : test =
+  name >:: fun _ ->
+  assert_equal expected_output
+    (create_chords input_piano input_scale)
+    ~printer:(pp_list pp_string)
+
+(** [create_left_hand_test name piano expected_output] constructs an OUnit test
+    named [name] that asserts the quality of [expected_output] with
+    [create_left_hand melody chords]. *)
+let create_left_hand_test (name : string) (melody : string list)
+    (chords : string list) (expected_output : string list) : test =
+  name >:: fun _ ->
+  assert_equal expected_output
+    (create_left_hand melody chords)
+    ~printer:(pp_list pp_string)
+
 let music_json_tests =
   [
     scale_from_json_test "test c major" ton "major" "C"
       (Some { key = "C"; steps = [ 0; 2; 2; 1; 2; 2; 2; 1 ] });
-    scale_from_json_test "test a natural_minor" ton "natural_minor" "A"
+    scale_from_json_test "test a minor" ton "minor" "A"
       (Some { key = "A"; steps = [ 0; 2; 1; 2; 2; 1; 2; 2 ] });
   ]
 
@@ -167,6 +187,9 @@ let music_tests =
     generate_seed_test_in_range "In range seeds: Length: 5, range: 7" 5 7;
     generate_seed_test_in_range "In range seeds: Length: 6, range: 100" 6 100;
     generate_seed_test_in_range "In range seeds: Length: 9, range: 50" 6 50;
+    create_chords_test "chords for random C major melody" piano
+      { key = "C"; steps = major }
+      [ "(C,E,G)"; "(F,A,C)"; "(G,B,D)" ];
   ]
 
 let suite =
