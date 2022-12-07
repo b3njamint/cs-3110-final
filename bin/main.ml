@@ -139,10 +139,10 @@ let main () =
   let seed = random_beginning @ mid_seed @ random_ending in
   let melody = create_melody notes seed in
   ANSITerminal.print_string [ ANSITerminal.green ] "\nMelody: ";
-  let tmp = print_melody melody in
+  print_melody melody;
   let chords = create_chords piano scale in
   let left_hand = create_left_hand melody chords in
   ANSITerminal.print_string [ ANSITerminal.green ] "\nChords: ";
-  let tmp2 = print_chords left_hand
+  print_chords left_hand
 
 let () = main ()
