@@ -141,8 +141,9 @@ let rec create_melody (notes : notes) (seed : seed) : string list =
   | [] -> []
   | h :: t -> find_note notes h 0 :: create_melody notes t
 
-let rec create_left_hand (melody : string list) (chords : string list) :
-    string list =
-  match melody with
-  | e1 :: e2 :: e3 :: e4 :: t -> List.nth chords 1 :: create_left_hand t chords
+let rec create_left_hand (melody : string list) (chords : string list)
+    (seed : seed) : string list =
+  match (melody, seed) with
+  | e1 :: e2 :: e3 :: e4 :: t, se :: st ->
+      List.nth chords (se mod 3) :: create_left_hand t chords st
   | _ -> [ List.nth chords 1 ]

@@ -56,6 +56,6 @@ val create_melody : notes -> seed -> string list
 (** [create_melody notes indexes] is the melody created from the notes and the
     list of random indexes. *)
 
-val create_left_hand : string list -> string list -> string list
+val create_left_hand : string list -> string list -> int list -> string list
 (** [create_left_hand m c] is the left hand chords created from the melody [m]
     and chords [c]. *)
