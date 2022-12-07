@@ -123,7 +123,9 @@ let main () =
     print_string "\n> ";
     match read_line () with
     | exception End_of_file -> rec_get_valid_length 0
-    | entered_length -> rec_get_valid_length (int_of_string entered_length)
+    | entered_length -> (
+        try rec_get_valid_length (int_of_string entered_length)
+        with _ -> rec_get_valid_length ~-1)
   in
   let notes = create_notes piano scale in
   let mid_seg_len =
@@ -132,7 +134,8 @@ let main () =
   let mid_seed = generate_seed mid_seg_len (List.length notes) in
   let seed = random_beginning @ mid_seed @ random_ending in
   let melody = create_melody notes seed in
-  ANSITerminal.print_string [ ANSITerminal.green ] "\nMelody: ";
+  ANSITerminal.print_string [ ANSITerminal.green ]
+    "Here is your result :)\n\nMelody: ";
   print_music " " melody;
   let chords = create_chords piano scale in
   let left_hand = create_left_hand melody chords seed in
