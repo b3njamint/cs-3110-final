@@ -89,10 +89,11 @@ let create_chords_test (name : string) (input_piano : piano)
     named [name] that asserts the quality of [expected_output] with
     [create_left_hand melody chords]. *)
 let create_left_hand_test (name : string) (melody : string list)
-    (chords : string list) (expected_output : string list) : test =
+    (chords : string list) (seed : int list) (expected_output : string list) :
+    test =
   name >:: fun _ ->
   assert_equal expected_output
-    (create_left_hand melody chords)
+    (create_left_hand melody chords seed)
     ~printer:(pp_list pp_string)
 
 let music_json_tests =
