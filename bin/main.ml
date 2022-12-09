@@ -33,6 +33,22 @@ let rec rec_get_valid_length (length : int) : int =
         with _ -> rec_get_valid_length ~-1))
   else length
 
+(** [rec_get_valid_octave octave] continues to ask for [octave] until it is
+    valid. A octave is valid if it is between 0 and 8 inclusive. *)
+let rec rec_get_valid_octave (octave : int) : int =
+  if not (octave >= 0 && octave <= 8) then (
+    ANSITerminal.print_string [ ANSITerminal.red ]
+      ("\nEntered octave: " ^ string_of_int octave ^ " is not valid octave.\n");
+    ANSITerminal.print_string [ ANSITerminal.blue ]
+      "\nPlease enter octave of melody (between 0 and 8).\n";
+    print_string "\n> ";
+    match read_line () with
+    | exception End_of_file -> rec_get_valid_octave ~-1
+    | entered_octave -> (
+        try rec_get_valid_octave (int_of_string entered_octave)
+        with _ -> rec_get_valid_octave ~-1))
+  else octave
+
 (** [is_valid_key key lst] is true if [key] is an element in [lst] and is false 
     otherwise. *)
 let rec is_valid_key (key : string) = function
@@ -117,6 +133,16 @@ let main () =
         |> rec_get_valid_key
   in
   let scale = get_valid_scale key in
+  let octave =
+    ANSITerminal.print_string [ ANSITerminal.blue ]
+    "\nPlease enter octave of melody (between 0 and 8).\n";
+    print_string "\n> ";
+    match read_line () with
+    | exception End_of_file -> rec_get_valid_octave ~-1
+    | entered_octave -> (
+        try rec_get_valid_octave (int_of_string entered_octave)
+        with _ -> rec_get_valid_octave ~-1)
+  in
   let length =
     ANSITerminal.print_string [ ANSITerminal.blue ]
       "\nPlease enter length of melody (at least 10).\n";
