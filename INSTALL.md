@@ -1,13 +1,16 @@
-## Install Instructions  
-Follow the steps below in terminal to install/use the melody generator:  
+## Install Instructions
+
+Follow the steps below in terminal to install/use the melody generator:
+
 1. To install OPAM packages:  
-    `$ opam install ANSITerminal`  
+   `$ opam install ANSITerminal`
+   `$ opam install ao`
 2. To build the melody generator:  
-    `$ make build`  
+   `$ make build`
 3. To play the melody generator:  
-    `$ make play`  
+   `$ make play`
 4. To remove build files when done:  
-    `$ make clean`  
+   `$ make clean`
 5. To view documentation html:  
-    `$ make doc`  
-    `$ make opendoc`  
+   `$ make doc`  
+   `$ make opendoc`

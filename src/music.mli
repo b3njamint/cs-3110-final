@@ -61,3 +61,8 @@ val create_left_hand : string list -> string list -> int list -> string list
     and chords [c]. *)
 
 val create_melody_note_sheet : notes -> string list -> string
+(** [create_melody_note_sheet n m] is the note sheet created from the melody [m]
+    and notes [n]. *)
+
+val play_melody : string list -> int -> unit
+(** [play_melody m o] plays melody [m] in octave [o] using the Mm_audio library*)

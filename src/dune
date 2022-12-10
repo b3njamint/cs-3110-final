@@ -1,4 +1,4 @@
 (library
  (name music)
  (public_name Music)
- (libraries yojson ANSITerminal))
+ (libraries yojson ANSITerminal mm.audio mm.ao))
