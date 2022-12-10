@@ -59,3 +59,5 @@ val create_melody : notes -> seed -> string list
 val create_left_hand : string list -> string list -> int list -> string list
 (** [create_left_hand m c] is the left hand chords created from the melody [m]
     and chords [c]. *)
+
+val create_melody_note_sheet : notes -> string list -> string

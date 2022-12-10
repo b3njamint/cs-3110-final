@@ -135,7 +135,7 @@ let main () =
   let scale = get_valid_scale key in
   let octave =
     ANSITerminal.print_string [ ANSITerminal.blue ]
-    "\nPlease enter octave of melody (between 0 and 8).\n";
+      "\nPlease enter octave of melody (between 0 and 8).\n";
     print_string "\n> ";
     match read_line () with
     | exception End_of_file -> rec_get_valid_octave ~-1
@@ -167,6 +167,8 @@ let main () =
   let left_hand = create_left_hand melody chords seed in
   ANSITerminal.print_string [ ANSITerminal.green ] "Chords: ";
   print_music " " left_hand;
+  ANSITerminal.print_string [ ANSITerminal.green ] "Note Sheet: ";
+  let _ = create_melody_note_sheet notes melody in
   let seed_print = List.map (fun e -> string_of_int e) seed in
   ANSITerminal.print_string [ ANSITerminal.green ] "Seed: ";
   print_music "" seed_print;

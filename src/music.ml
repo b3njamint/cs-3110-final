@@ -19,6 +19,17 @@ type seed = int list
 exception UnknownKey of string
 exception BadIndex of int
 
+let colors =
+  [
+    ANSITerminal.red;
+    ANSITerminal.yellow;
+    ANSITerminal.green;
+    ANSITerminal.cyan;
+    ANSITerminal.blue;
+    ANSITerminal.magenta;
+    ANSITerminal.black;
+  ]
+
 let piano_from_json json =
   json |> member "piano" |> to_list |> List.map to_string
 
@@ -149,3 +160,37 @@ let rec create_left_hand (melody : string list) (chords : string list)
   | _ :: t, se :: st ->
       List.nth chords (se mod 3) :: create_left_hand t chords st
   | _ -> []
+
+let rec acc_create_line (acc : string) (length : int) : string =
+  match length with
+  | 0 -> acc ^ "\n"
+  | i -> "-" ^ acc_create_line acc (i - 1)
+
+let rec acc_create_note_line (acc : string) (note : string)
+    (melody : string list) : string =
+  match melody with
+  | [] -> acc ^ "\n"
+  | h :: t ->
+      let new_acc = acc ^ " " ^ if h == note then "♩" else " " in
+      acc_create_note_line new_acc note t
+
+let rec create_note_lines (acc : string) (notes : notes) (melody : string list)
+    (colors : ANSITerminal.style list) : string =
+  match (notes, colors) with
+  | [], _ -> acc
+  | _, [] -> acc
+  | h1 :: t1, h2 :: t2 ->
+      let note = h1 ^ if String.length h1 == 1 then " " else "" in
+      let note_line = acc_create_note_line "" h1 melody in
+      ANSITerminal.print_string [ h2 ] note;
+      ANSITerminal.print_string [ ANSITerminal.Bold ] "|";
+      ANSITerminal.print_string [ h2 ] note_line;
+      create_note_lines (note ^ "|" ^ note_line) t1 melody t2
+
+let create_melody_note_sheet (notes : notes) (melody : string list) : string =
+  let length = List.length melody in
+  let line = acc_create_line "" (2 * (length + 2)) in
+  ANSITerminal.print_string [ ANSITerminal.Bold ] ("\n" ^ line);
+  let note_lines = create_note_lines "" notes melody colors in
+  ANSITerminal.print_string [ ANSITerminal.Bold ] (line ^ "\n");
+  line ^ note_lines ^ line
