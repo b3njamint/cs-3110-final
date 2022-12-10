@@ -6,6 +6,23 @@ let create_file_name (name : string) =
 let piano_file = create_file_name "piano"
 let tonalities_file = create_file_name "tonalities"
 let segments_file = create_file_name "segments"
+
+(* Sub Contra, Contra, Great, Small, 1 Line, 2 Line, 3 Line, 4 \
+    Line, 5 Line\n *)
+
+let octaves =
+  [
+    "Sub Contra";
+    "Contra";
+    "Great";
+    "Small";
+    "1 Line";
+    "2 Line";
+    "3 Line";
+    "4 Line";
+    "5 Line";
+  ]
+
 let piano = piano_from_json (Yojson.Basic.from_file piano_file)
 
 let scale (name : string) (key : string) =
@@ -35,18 +52,21 @@ let rec rec_get_valid_length (length : int) : int =
 
 (** [rec_get_valid_octave octave] continues to ask for [octave] until it is
     valid. A octave is valid if it is between 0 and 8 inclusive. *)
-let rec rec_get_valid_octave (octave : int) : int =
-  if not (octave >= 0 && octave <= 8) then (
+let rec rec_get_valid_octave (octave : string) : string =
+  if not (List.mem octave octaves) then (
     ANSITerminal.print_string [ ANSITerminal.red ]
-      ("\nEntered octave: " ^ string_of_int octave ^ " is not valid octave.\n");
+      ("\nEntered octave: " ^ octave ^ " is not valid octave.\n");
     ANSITerminal.print_string [ ANSITerminal.blue ]
-      "\nPlease enter octave of melody (between 0 and 8).\n";
+      "\n\
+       Please enter octave of melody: \n\
+       Options: Sub Contra, Contra, Great, Small, 1 Line, 2 Line, 3 Line, 4 \
+       Line, 5 Line\n";
     print_string "\n> ";
     match read_line () with
-    | exception End_of_file -> rec_get_valid_octave ~-1
+    | exception End_of_file -> rec_get_valid_octave ""
     | entered_octave -> (
-        try rec_get_valid_octave (int_of_string entered_octave)
-        with _ -> rec_get_valid_octave ~-1))
+        try rec_get_valid_octave entered_octave
+        with _ -> entered_octave |> rec_get_valid_octave))
   else octave
 
 (** [is_valid_key key lst] is true if [key] is an element in [lst] and is false 
@@ -135,13 +155,14 @@ let main () =
   let scale = get_valid_scale key in
   let octave =
     ANSITerminal.print_string [ ANSITerminal.blue ]
-    "\nPlease enter octave of melody (between 0 and 8).\n";
+      "\n\
+       Please enter octave of melody: \n\
+       Options: Sub Contra, Contra, Great, Small, 1 Line, 2 Line, 3 Line, 4 \
+       Line, 5 Line\n";
     print_string "\n> ";
     match read_line () with
-    | exception End_of_file -> rec_get_valid_octave ~-1
-    | entered_octave -> (
-        try rec_get_valid_octave (int_of_string entered_octave)
-        with _ -> rec_get_valid_octave ~-1)
+    | exception End_of_file -> rec_get_valid_octave ""
+    | entered_octave -> entered_octave |> String.trim |> rec_get_valid_octave
   in
   let length =
     ANSITerminal.print_string [ ANSITerminal.blue ]
