@@ -13,13 +13,30 @@ type tonality = {
   steps : int list;
 }
 
+type named_frequency = {
+  name : string;
+  frequency : int;
+}
+
 type tonalities = { tonalities : tonality list }
+type frequencies = { frequencies : named_frequency list }
 type piano = string list
 type notes = string list
 type seed = int list
 
 exception UnknownKey of string
 exception BadIndex of int
+
+let colors =
+  [
+    ANSITerminal.red;
+    ANSITerminal.yellow;
+    ANSITerminal.green;
+    ANSITerminal.cyan;
+    ANSITerminal.blue;
+    ANSITerminal.magenta;
+    ANSITerminal.black;
+  ]
 
 let piano_from_json json =
   json |> member "piano" |> to_list |> List.map to_string
@@ -36,16 +53,31 @@ let tonalities_from_json json =
       json |> member "tonalities" |> to_list |> List.map tonality_of_json;
   }
 
+let frequency_of_json json =
+  {
+    name = json |> member "name" |> to_string;
+    frequency = json |> member "frequency" |> to_int;
+  }
+
+let frequencies_from_json json =
+  {
+    frequencies =
+      json |> member "frequencies" |> to_list |> List.map frequency_of_json;
+  }
+
 let scale_names json =
   List.fold_left
-    (fun acc elt -> if List.mem elt.name acc then acc else elt.name :: acc)
+    (fun acc (elt : tonality) ->
+      if List.mem elt.name acc then acc else elt.name :: acc)
     [] json.tonalities
   |> List.rev
 
 let scale_from_json json scale key =
   let found_tonalities = tonalities_from_json json in
   let found_scale =
-    List.find_opt (fun a -> a.name = scale) found_tonalities.tonalities
+    List.find_opt
+      (fun (a : tonality) -> a.name = scale)
+      found_tonalities.tonalities
   in
   match found_scale with
   | None -> None
@@ -151,6 +183,40 @@ let rec create_left_hand (melody : string list) (chords : string list)
   | _ :: t, se :: st ->
       List.nth chords (se mod 3) :: create_left_hand t chords st
   | _ -> []
+
+let rec acc_create_line (acc : string) (length : int) : string =
+  match length with
+  | 0 -> acc ^ "\n"
+  | i -> "-" ^ acc_create_line acc (i - 1)
+
+let rec acc_create_note_line (acc : string) (note : string)
+    (melody : string list) : string =
+  match melody with
+  | [] -> acc ^ "\n"
+  | h :: t ->
+      let new_acc = acc ^ " " ^ if h == note then "♩" else " " in
+      acc_create_note_line new_acc note t
+
+let rec create_note_lines (acc : string) (notes : notes) (melody : string list)
+    (colors : ANSITerminal.style list) : string =
+  match (notes, colors) with
+  | [], _ -> acc
+  | _, [] -> acc
+  | h1 :: t1, h2 :: t2 ->
+      let note = h1 ^ if String.length h1 == 1 then " " else "" in
+      let note_line = acc_create_note_line "" h1 melody in
+      ANSITerminal.print_string [ h2 ] note;
+      ANSITerminal.print_string [ ANSITerminal.Bold ] "|";
+      ANSITerminal.print_string [ h2 ] note_line;
+      create_note_lines (note ^ "|" ^ note_line) t1 melody t2
+
+let create_melody_note_sheet (notes : notes) (melody : string list) : string =
+  let length = List.length melody in
+  let line = acc_create_line "" (2 * (length + 2)) in
+  ANSITerminal.print_string [ ANSITerminal.Bold ] ("\n" ^ line);
+  let note_lines = create_note_lines "" notes melody colors in
+  ANSITerminal.print_string [ ANSITerminal.Bold ] (line ^ "\n");
+  line ^ note_lines ^ line
 
 let activate_audio_player (frequency : float) =
   let channels = 2 in

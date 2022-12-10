@@ -159,6 +159,7 @@ let main () =
        Please enter octave of melody: \n\
        Options: Sub Contra, Contra, Great, Small, 1 Line, 2 Line, 3 Line, 4 \
        Line, 5 Line\n";
+
     print_string "\n> ";
     match read_line () with
     | exception End_of_file -> rec_get_valid_octave ""
@@ -188,6 +189,8 @@ let main () =
   let left_hand = create_left_hand melody chords seed in
   ANSITerminal.print_string [ ANSITerminal.green ] "Chords: ";
   print_music " " left_hand;
+  ANSITerminal.print_string [ ANSITerminal.green ] "Note Sheet: ";
+  let _ = create_melody_note_sheet notes melody in
   let seed_print = List.map (fun e -> string_of_int e) seed in
   ANSITerminal.print_string [ ANSITerminal.green ] "Seed: ";
   print_music "" seed_print;
