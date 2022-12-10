@@ -40,6 +40,10 @@ val segment_from_json : Yojson.Basic.t -> bool -> seed
     returns ending pattern. Requires: [j] is a valid JSON segments
     representation. *)
 
+val frequencies_from_json : Yojson.Basic.t -> int
+(** [piano_from_json j] is the notes that [j] contains. Requires: [j] is a valid
+    JSON piano representation. *)
+
 val generate_seed : int -> int -> seed
 (** [generate_seed l r] is a list of random indexes of length [l] from range
     [0..r - 1]. *)
@@ -64,5 +68,5 @@ val create_melody_note_sheet : notes -> string list -> string
 (** [create_melody_note_sheet n m] is the note sheet created from the melody [m]
     and notes [n]. *)
 
-val play_melody : string list -> int -> unit
+val play_melody : string list -> string -> unit
 (** [play_melody m o] plays melody [m] in octave [o] using the Mm_audio library*)
