@@ -181,13 +181,18 @@ let music_tests =
         "D";
         "F#";
       ];
-    generate_seed_test_randomness "Randomness of seedLength: 10, range: 10" 10
+    generate_seed_test_randomness "Randomness of seed: Length: 10, range: 10" 10
       10;
     generate_seed_test_randomness "Randomness of seed: Length: 10, range: 10" 10
       10;
+    generate_seed_test_randomness "Randomness of seed: Length: 100, range: 9"
+      100 9;
+    generate_seed_test_randomness "Randomness of seed: Length: 50, range: 100"
+      50 100;
     generate_seed_test_in_range "In range seeds: Length: 5, range: 7" 5 7;
     generate_seed_test_in_range "In range seeds: Length: 6, range: 100" 6 100;
     generate_seed_test_in_range "In range seeds: Length: 9, range: 50" 6 50;
+    generate_seed_test_in_range "In range seeds: Length: 20, range: 15" 20 15;
     create_chords_test "chords for random C major melody" piano
       { key = "C"; steps = major }
       [ "(C,E,G)"; "(F,A,C)"; "(G,B,D)" ];
