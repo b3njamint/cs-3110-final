@@ -66,7 +66,7 @@ let colors =
 let create_file_name (name : string) =
   "data" ^ Filename.dir_sep ^ name ^ ".json"
 
-let frequency_file = create_file_name "frequency"
+let frequency_file = create_file_name "frequencies"
 
 let piano_from_json json =
   json |> member "piano" |> to_list |> List.map to_string
@@ -278,7 +278,20 @@ let activate_audio_player (frequency : float) =
   wav#close;
   ao#close
 
-let rec play_melody (melody : string list) (octave : octave) : unit =
+let rec play_melody (melody : string list) (octave : string) : unit =
+  let oct =
+    match octave with
+    | "Sub Contra" -> SubContra
+    | "Contra" -> Contra
+    | "Great" -> Great
+    | "Small" -> Small
+    | "1 Line" -> OneLine
+    | "2 Line" -> TwoLine
+    | "3 Line" -> ThreeLine
+    | "4 Line" -> FourLine
+    | "5 Line" -> FiveLine
+    | _ -> raise (UnknownKey octave)
+  in
   match melody with
   | [] -> ()
   | h :: t ->
@@ -298,7 +311,7 @@ let rec play_melody (melody : string list) (octave : octave) : unit =
          | "B" -> B
          | _ -> raise (UnknownKey h)
        in
-       match (note, octave) with
+       match (note, oct) with
        | C, SubContra -> activate_audio_player (frequency_from_name "C0")
        | Cs, SubContra -> activate_audio_player (frequency_from_name "C#0")
        | D, SubContra -> activate_audio_player (frequency_from_name "D0")

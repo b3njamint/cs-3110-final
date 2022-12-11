@@ -185,6 +185,7 @@ let main () =
   ANSITerminal.print_string [ ANSITerminal.green ]
     "Here is your result :)\n\nMelody: ";
   print_music " " melody;
+  let _ = play_melody melody octave in
   let chords = create_chords piano scale in
   let left_hand = create_left_hand melody chords seed in
   ANSITerminal.print_string [ ANSITerminal.green ] "Chords: ";
