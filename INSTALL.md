@@ -3,7 +3,7 @@
 Follow the steps below in terminal to install/use the melody generator:
 
 1. To install OPAM packages:  
-   `$ opam install ANSITerminal`
+   `$ opam install ANSITerminal`  
    `$ opam install ao`
 2. To build the melody generator:  
    `$ make build`
