@@ -93,9 +93,9 @@ let create_chords_test (name : string) (input_piano : piano)
     (create_chords input_piano input_scale)
     ~printer:(pp_list pp_string)
 
-(** [create_left_hand_test name piano expected_output] constructs an OUnit test
-    named [name] that asserts the quality of [expected_output] with
-    [create_left_hand melody chords]. *)
+(** [create_left_hand_test name melody chords seed expected_output] constructs
+    an OUnit test named [name] that asserts the quality of [expected_output]
+    with [create_left_hand melody chords seed]. *)
 let create_left_hand_test (name : string) (melody : string list)
     (chords : string list) (seed : int list) (expected_output : string list) :
     test =
@@ -103,6 +103,16 @@ let create_left_hand_test (name : string) (melody : string list)
   assert_equal expected_output
     (create_left_hand melody chords seed)
     ~printer:(pp_list pp_string)
+
+(** [create_melody_note_sheet_test name notes melody expected_output] constructs
+    an OUnit test named [name] that asserts the quality of [expected_output]
+    with [create_melody_note_sheet notes melody]. *)
+let create_melody_note_sheet_test (name : string) (notes : notes)
+    (melody : string list) (expected_output : string) : test =
+  name >:: fun _ ->
+  assert_equal expected_output
+    (create_melody_note_sheet notes melody)
+    ~printer:pp_string
 
 let music_json_tests =
   [
@@ -226,6 +236,362 @@ let music_tests =
       { key = "A"; steps = major }
       (index_of_start "A" (create_notes piano { key = "A"; steps = major }))
       [ "A"; "B"; "C#"; "D"; "E"; "F#"; "G#" ];
+    create_melody_note_sheet_test
+      "create note sheet of c major melody length 10"
+      [ "C"; "D"; "E"; "F"; "G"; "A"; "B" ]
+      [ "C"; "E"; "G"; "E"; "C"; "C"; "E"; "F"; "D"; "C" ]
+      "------------------------\n\
+       C | ♩       ♩ ♩       ♩\n\
+       D |                 ♩  \n\
+       E |   ♩   ♩     ♩      \n\
+       F |               ♩    \n\
+       G |     ♩              \n\
+       A |                    \n\
+       B |                    \n\
+       ------------------------\n";
+    create_melody_note_sheet_test
+      "create note sheet of a minor melody length 10"
+      [ "C"; "D"; "E"; "F"; "G"; "A"; "B" ]
+      [ "C"; "D"; "E"; "F"; "F"; "B"; "E"; "C"; "B"; "C" ]
+      "------------------------\n\
+       C | ♩             ♩   ♩\n\
+       D |   ♩                \n\
+       E |     ♩       ♩      \n\
+       F |       ♩ ♩          \n\
+       G |                    \n\
+       A |                    \n\
+       B |           ♩     ♩  \n\
+       ------------------------\n";
+    create_melody_note_sheet_test
+      "create note sheet of e minor harmonic melody length 10"
+      [ "C"; "D#"; "E"; "F#"; "G"; "A"; "B" ]
+      [ "C"; "E"; "G"; "C"; "F#"; "D#"; "E"; "C"; "D#"; "C" ]
+      "------------------------\n\
+       C | ♩     ♩       ♩   ♩\n\
+       D#|           ♩     ♩  \n\
+       E |   ♩         ♩      \n\
+       F#|         ♩          \n\
+       G |     ♩              \n\
+       A |                    \n\
+       B |                    \n\
+       ------------------------\n";
+    create_melody_note_sheet_test
+      "create note sheet of c major melody length 20"
+      [ "C"; "D"; "E"; "F"; "G"; "A"; "B" ]
+      [
+        "C";
+        "E";
+        "G";
+        "E";
+        "B";
+        "F";
+        "D";
+        "D";
+        "C";
+        "A";
+        "F";
+        "F";
+        "E";
+        "E";
+        "F";
+        "F";
+        "F";
+        "D";
+        "E";
+        "C";
+      ]
+      "--------------------------------------------\n\
+       C | ♩               ♩                     ♩\n\
+       D |             ♩ ♩                   ♩    \n\
+       E |   ♩   ♩                 ♩ ♩         ♩  \n\
+       F |           ♩         ♩ ♩     ♩ ♩ ♩      \n\
+       G |     ♩                                  \n\
+       A |                   ♩                    \n\
+       B |         ♩                              \n\
+       --------------------------------------------\n";
+    create_melody_note_sheet_test
+      "create note sheet of a minor melody length 20"
+      [ "C"; "D"; "E"; "F"; "G"; "A"; "B" ]
+      [
+        "C";
+        "E";
+        "G";
+        "E";
+        "D";
+        "B";
+        "G";
+        "A";
+        "F";
+        "F";
+        "B";
+        "D";
+        "D";
+        "G";
+        "F";
+        "B";
+        "D";
+        "E";
+        "D";
+        "C";
+      ]
+      "--------------------------------------------\n\
+       C | ♩                                     ♩\n\
+       D |         ♩             ♩ ♩       ♩   ♩  \n\
+       E |   ♩   ♩                           ♩    \n\
+       F |                 ♩ ♩         ♩          \n\
+       G |     ♩       ♩             ♩            \n\
+       A |               ♩                        \n\
+       B |           ♩         ♩         ♩        \n\
+       --------------------------------------------\n";
+    create_melody_note_sheet_test
+      "create note sheet of e minor harmonic melody length 20"
+      [ "C"; "D#"; "E"; "F#"; "G"; "A"; "B" ]
+      [
+        "C";
+        "E";
+        "D#";
+        "F#";
+        "B";
+        "A";
+        "G";
+        "B";
+        "D#";
+        "A";
+        "A";
+        "E";
+        "A";
+        "C";
+        "E";
+        "E";
+        "F#";
+        "D#";
+        "E";
+        "C";
+      ]
+      "--------------------------------------------\n\
+       C | ♩                         ♩           ♩\n\
+       D#|     ♩           ♩                 ♩    \n\
+       E |   ♩                   ♩     ♩ ♩     ♩  \n\
+       F#|       ♩                         ♩      \n\
+       G |             ♩                          \n\
+       A |           ♩       ♩ ♩   ♩              \n\
+       B |         ♩     ♩                        \n\
+       --------------------------------------------\n";
+    create_melody_note_sheet_test
+      "create note sheet of c major melody length 50"
+      [ "C"; "D"; "E"; "F"; "G"; "A"; "B" ]
+      [
+        "C";
+        "E";
+        "D";
+        "D";
+        "F";
+        "G";
+        "G";
+        "B";
+        "D";
+        "A";
+        "D";
+        "D";
+        "B";
+        "C";
+        "B";
+        "D";
+        "D";
+        "D";
+        "G";
+        "D";
+        "F";
+        "E";
+        "C";
+        "C";
+        "B";
+        "B";
+        "D";
+        "G";
+        "F";
+        "C";
+        "G";
+        "B";
+        "E";
+        "G";
+        "F";
+        "C";
+        "A";
+        "G";
+        "C";
+        "A";
+        "B";
+        "D";
+        "G";
+        "A";
+        "C";
+        "A";
+        "F";
+        "D";
+        "E";
+        "C";
+      ]
+      "--------------------------------------------------------------------------------------------------------\n\
+       C | ♩                         ♩                 ♩ ♩           \
+       ♩           ♩     ♩           ♩         ♩\n\
+       D |     ♩ ♩         ♩   ♩ ♩       ♩ ♩ ♩   ♩             \
+       ♩                             ♩           ♩    \n\
+       E |   ♩                                       ♩                     \
+       ♩                               ♩  \n\
+       F |         ♩                               ♩               ♩           \
+       ♩                       ♩      \n\
+       G |           ♩ ♩                       ♩                 ♩     ♩     \
+       ♩       ♩         ♩              \n\
+       A |                   \
+       ♩                                                     ♩     ♩       ♩   \
+       ♩        \n\
+       B |               ♩         ♩   ♩                   ♩ ♩           \
+       ♩                 ♩                  \n\
+       --------------------------------------------------------------------------------------------------------\n";
+    create_melody_note_sheet_test
+      "create note sheet of a minor melody length 50"
+      [ "C"; "D"; "E"; "F"; "G"; "A"; "B" ]
+      [
+        "C";
+        "D";
+        "E";
+        "F";
+        "B";
+        "C";
+        "A";
+        "F";
+        "G";
+        "E";
+        "E";
+        "C";
+        "D";
+        "F";
+        "F";
+        "B";
+        "C";
+        "D";
+        "B";
+        "B";
+        "F";
+        "D";
+        "B";
+        "A";
+        "F";
+        "E";
+        "A";
+        "C";
+        "D";
+        "A";
+        "D";
+        "A";
+        "B";
+        "B";
+        "C";
+        "A";
+        "C";
+        "F";
+        "D";
+        "E";
+        "D";
+        "D";
+        "G";
+        "A";
+        "D";
+        "A";
+        "F";
+        "E";
+        "D";
+        "C";
+      ]
+      "--------------------------------------------------------------------------------------------------------\n\
+       C | ♩         ♩           ♩         ♩                     ♩             \
+       ♩   ♩                         ♩\n\
+       D |   ♩                     ♩         ♩       ♩             ♩   \
+       ♩               ♩   ♩ ♩     ♩       ♩  \n\
+       E |     ♩             ♩ ♩                             \
+       ♩                           ♩               ♩    \n\
+       F |       ♩       ♩           ♩ ♩           ♩       \
+       ♩                         ♩                 ♩      \n\
+       G |                 \
+       ♩                                                                   \
+       ♩              \n\
+       A |             ♩                                 ♩     ♩     ♩   \
+       ♩       ♩               ♩   ♩        \n\
+       B |         ♩                     ♩     ♩ ♩     ♩                   ♩ \
+       ♩                                \n\
+       --------------------------------------------------------------------------------------------------------\n";
+    create_melody_note_sheet_test
+      "create note sheet of e minor harmonic melody length 50"
+      [ "C"; "D#"; "E"; "F#"; "G"; "A"; "B" ]
+      [
+        "C";
+        "G";
+        "A";
+        "A";
+        "G";
+        "G";
+        "A";
+        "C";
+        "G";
+        "A";
+        "F#";
+        "C";
+        "A";
+        "F#";
+        "D#";
+        "E";
+        "E";
+        "A";
+        "F#";
+        "F#";
+        "D#";
+        "D#";
+        "F#";
+        "A";
+        "F#";
+        "F#";
+        "F#";
+        "A";
+        "G";
+        "C";
+        "B";
+        "F#";
+        "E";
+        "D#";
+        "B";
+        "A";
+        "A";
+        "G";
+        "F#";
+        "F#";
+        "C";
+        "A";
+        "D#";
+        "C";
+        "A";
+        "C";
+        "E";
+        "F#";
+        "D#";
+        "C";
+      ]
+      "--------------------------------------------------------------------------------------------------------\n\
+       C | ♩             ♩       ♩                                   \
+       ♩                     ♩     ♩   ♩       ♩\n\
+       D#|                             ♩           ♩ ♩                       \
+       ♩                 ♩           ♩  \n\
+       E |                               ♩ ♩                               \
+       ♩                           ♩      \n\
+       F#|                     ♩     ♩         ♩ ♩     ♩   ♩ ♩ ♩         \
+       ♩             ♩ ♩               ♩    \n\
+       G |   ♩     ♩ ♩     ♩                                       \
+       ♩                 ♩                        \n\
+       A |     ♩ ♩     ♩     ♩     ♩         ♩           ♩       \
+       ♩               ♩ ♩         ♩     ♩          \n\
+       B |                                                             ♩       \
+       ♩                              \n\
+       --------------------------------------------------------------------------------------------------------\n";
   ]
 
 let suite =

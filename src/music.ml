@@ -266,7 +266,7 @@ let rec create_note_lines (acc : string) (notes : notes) (melody : string list)
       ANSITerminal.print_string [ h2 ] note;
       ANSITerminal.print_string [ ANSITerminal.Bold ] "|";
       ANSITerminal.print_string [ h2 ] note_line;
-      create_note_lines (note ^ "|" ^ note_line) t1 melody t2
+      create_note_lines (acc ^ note ^ "|" ^ note_line) t1 melody t2
 
 let create_melody_note_sheet (notes : notes) (melody : string list) : string =
   let length = List.length melody in
