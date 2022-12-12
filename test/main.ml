@@ -44,6 +44,14 @@ let create_notes_test (name : string) (input_piano : piano)
     (create_notes input_piano input_scale)
     ~printer:(pp_list pp_string)
 
+let reorder_notes_test (name : string) (input_piano : piano)
+    (input_scale : scale) (input_point : int) (expected_output : string list) :
+    test =
+  name >:: fun _ ->
+  assert_equal expected_output
+    (reorder_notes (create_notes input_piano input_scale) input_point)
+    ~printer:(pp_list pp_string)
+
 (** [generate_seed_test_randomness name length range] constructs an OUnit test
     named [name] that asserts that two generated seeds are not equivalent if the
     inputs are the same *)
@@ -196,6 +204,28 @@ let music_tests =
     create_chords_test "chords for random C major melody" piano
       { key = "C"; steps = major }
       [ "(C,E,G)"; "(F,A,C)"; "(G,B,D)" ];
+    create_chords_test "chords for random D major melody" piano
+      { key = "D"; steps = major }
+      [ "(D,F#,A)"; "(G,B,D)"; "(A,C#,E)" ];
+    create_chords_test "chords for random A minor melody" piano
+      { key = "A"; steps = minor }
+      [ "(A,C,E)"; "(D,F,A)"; "(E,G,B)" ];
+    reorder_notes_test "reorder d major" piano
+      { key = "D"; steps = major }
+      (index_of_start "D" (create_notes piano { key = "D"; steps = major }))
+      [ "D"; "E"; "F#"; "G"; "A"; "B"; "C#" ];
+    reorder_notes_test "reorder g major" piano
+      { key = "G"; steps = major }
+      (index_of_start "G" (create_notes piano { key = "G"; steps = major }))
+      [ "G"; "A"; "B"; "C"; "D"; "E"; "F#" ];
+    reorder_notes_test "reorder a minor" piano
+      { key = "A"; steps = minor }
+      (index_of_start "A" (create_notes piano { key = "A"; steps = minor }))
+      [ "A"; "B"; "C"; "D"; "E"; "F"; "G" ];
+    reorder_notes_test "reorder a major" piano
+      { key = "A"; steps = major }
+      (index_of_start "A" (create_notes piano { key = "A"; steps = major }))
+      [ "A"; "B"; "C#"; "D"; "E"; "F#"; "G#" ];
   ]
 
 let suite =

@@ -48,6 +48,12 @@ val create_notes : piano -> scale -> notes
 (** [create_notes p s] are the possible notes to randomly choose from based on
     scale [s] and piano [p]. *)
 
+val reorder_notes : notes -> int -> notes
+(** [reorder_notes n x] reorders notes so that the first note is the key. *)
+
+val index_of_start : 'a -> 'a list -> int
+(** index_of_start x l returns the index of x in list l. *)
+
 val create_chords : piano -> scale -> string list
 (** [create_chords p s] are the possible chords to randomly choose from based on
     scale [s] and piano [p]. *)
