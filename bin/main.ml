@@ -183,9 +183,8 @@ let main () =
   let seed = random_beginning @ mid_seed @ random_ending in
   let melody = create_melody notes seed in
   ANSITerminal.print_string [ ANSITerminal.green ]
-    "Here is your result :)\n\nMelody: ";
+    "\nHere is your result :)\n\nMelody: ";
   print_music " " melody;
-  let _ = play_melody melody octave in
   let chords = create_chords piano scale in
   let left_hand = create_left_hand melody chords seed in
   ANSITerminal.print_string [ ANSITerminal.green ] "Chords: ";
@@ -195,6 +194,7 @@ let main () =
   let seed_print = List.map (fun e -> string_of_int e) seed in
   ANSITerminal.print_string [ ANSITerminal.green ] "Seed: ";
   print_music "" seed_print;
+  let _ = play_melody melody octave in
   exit 0
 
 let () = main ()
