@@ -207,6 +207,9 @@ let music_tests =
     create_chords_test "chords for random D major melody" piano
       { key = "D"; steps = major }
       [ "(D,F#,A)"; "(G,B,D)"; "(A,C#,E)" ];
+    create_chords_test "chords for random A minor melody" piano
+      { key = "A"; steps = minor }
+      [ "(A,C,E)"; "(D,F,A)"; "(E,G,B)" ];
     reorder_notes_test "reorder d major" piano
       { key = "D"; steps = major }
       (index_of_start "D" (create_notes piano { key = "D"; steps = major }))
@@ -215,6 +218,14 @@ let music_tests =
       { key = "G"; steps = major }
       (index_of_start "G" (create_notes piano { key = "G"; steps = major }))
       [ "G"; "A"; "B"; "C"; "D"; "E"; "F#" ];
+    reorder_notes_test "reorder a minor" piano
+      { key = "A"; steps = minor }
+      (index_of_start "A" (create_notes piano { key = "A"; steps = minor }))
+      [ "A"; "B"; "C"; "D"; "E"; "F"; "G" ];
+    reorder_notes_test "reorder a major" piano
+      { key = "A"; steps = major }
+      (index_of_start "A" (create_notes piano { key = "A"; steps = major }))
+      [ "A"; "B"; "C#"; "D"; "E"; "F#"; "G#" ];
   ]
 
 let suite =
