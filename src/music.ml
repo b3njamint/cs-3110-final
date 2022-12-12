@@ -185,11 +185,28 @@ let rec acc_create_notes (curr_index : int) (piano : piano)
 let create_notes (piano : piano) (scale : scale) : notes =
   sorted_note_indexes piano scale |> acc_create_notes 0 piano
 
+let rec reorder_notes (list : notes) (point : int) : notes =
+  if point = 0 then list
+  else
+    match list with
+    | [] -> []
+    | hd :: tl -> reorder_notes (List.append tl [ hd ]) (point - 1)
+
+let index_of_start e lst =
+  let rec index_rec i = function
+    | [] -> raise Not_found
+    | hd :: tl -> if hd = e then i else index_rec (i + 1) tl
+  in
+  index_rec 0 lst
+
 let create_single_chord (index : int) (notes : notes) : string =
   "(" ^ List.nth notes 0 ^ "," ^ List.nth notes 2 ^ "," ^ List.nth notes 2 ^ ")"
 
 let create_chords (piano : piano) (scale : scale) : string list =
-  let notes = create_notes piano scale in
+  let notes =
+    reorder_notes (create_notes piano scale)
+      (index_of_start scale.key (create_notes piano scale))
+  in
   let chord_I =
     "(" ^ List.nth notes 0 ^ "," ^ List.nth notes 2 ^ "," ^ List.nth notes 4
     ^ ")"
