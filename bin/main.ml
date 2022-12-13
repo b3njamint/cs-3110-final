@@ -12,15 +12,15 @@ let segments_file = create_file_name "segments"
 
 let octaves =
   [
-    "sub contra";
-    "contra";
-    "great";
-    "small";
-    "1 line";
-    "2 line";
-    "3 line";
-    "4 line";
-    "5 line";
+    "Sub Contra";
+    "Contra";
+    "Great";
+    "Small";
+    "1 Line";
+    "2 Line";
+    "3 Line";
+    "4 Line";
+    "5 Line";
   ]
 
 let piano = piano_from_json (Yojson.Basic.from_file piano_file)
