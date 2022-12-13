@@ -425,6 +425,15 @@ let music_tests =
     create_chords_test "chords for random A minor melody" piano
       { key = "A"; steps = minor }
       [ "(A,C,E)"; "(D,F,A)"; "(E,G,B)" ];
+    create_chords_test "chords for random D# minor melody" piano
+      { key = "D#"; steps = minor }
+      [ "(D#,F#,A#)"; "(G#,B,D#)"; "(A#,C#,F)" ];
+    create_chords_test "chords for random F major melody" piano
+      { key = "F"; steps = major }
+      [ "(F,A,C)"; "(A#,D,F)"; "(C,E,G)" ];
+    create_chords_test "chords for random G major melody" piano
+      { key = "G"; steps = major }
+      [ "(G,B,D)"; "(C,E,G)"; "(D,F#,A)" ];
     reorder_notes_test "reorder d major" piano
       { key = "D"; steps = major }
       (index_of_start "D" (create_notes piano { key = "D"; steps = major }))
