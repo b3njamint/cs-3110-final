@@ -12,15 +12,15 @@ let segments_file = create_file_name "segments"
 
 let octaves =
   [
-    "Sub Contra";
-    "Contra";
-    "Great";
-    "Small";
-    "1 Line";
-    "2 Line";
-    "3 Line";
-    "4 Line";
-    "5 Line";
+    "sub contra";
+    "contra";
+    "great";
+    "small";
+    "1 line";
+    "2 line";
+    "3 line";
+    "4 line";
+    "5 line";
   ]
 
 let piano = piano_from_json (Yojson.Basic.from_file piano_file)
@@ -108,7 +108,10 @@ let rec rec_get_valid_scale_name (name : string) (key : string) : string =
     print_string "\n> ";
     match read_line () with
     | exception End_of_file -> rec_get_valid_scale_name "" key
-    | entered_name -> rec_get_valid_scale_name entered_name key)
+    | entered_name ->
+        rec_get_valid_scale_name
+          (String.lowercase_ascii (String.trim entered_name))
+          key)
   else name
 
 (** [get_valid_scale_name key] asks for a scale name (aka [entered_name]) and 
@@ -120,7 +123,10 @@ let get_valid_scale_name (key : string) =
   print_string "\n> ";
   match read_line () with
   | exception End_of_file -> rec_get_valid_scale_name "" key
-  | entered_name -> rec_get_valid_scale_name entered_name key
+  | entered_name ->
+      rec_get_valid_scale_name
+        (String.lowercase_ascii (String.trim entered_name))
+        key
 
 (** [get_valid_scale_name key] calls [get_valid_scale_name key] to get a 
     [scale_name] and then gets scale of [scale_name] by calling 
