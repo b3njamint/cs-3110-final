@@ -12,15 +12,15 @@ let segments_file = create_file_name "segments"
 
 let octaves =
   [
-    "Sub Contra";
-    "Contra";
-    "Great";
-    "Small";
-    "1 Line";
-    "2 Line";
-    "3 Line";
-    "4 Line";
-    "5 Line";
+    "sub contra";
+    "contra";
+    "great";
+    "small";
+    "1 line";
+    "2 line";
+    "3 line";
+    "4 line";
+    "5 line";
   ]
 
 let piano = piano_from_json (Yojson.Basic.from_file piano_file)
@@ -59,14 +59,16 @@ let rec rec_get_valid_octave (octave : string) : string =
     ANSITerminal.print_string [ ANSITerminal.blue ]
       "\n\
        Please enter octave of melody: \n\
-       Options: Sub Contra, Contra, Great, Small, 1 Line, 2 Line, 3 Line, 4 \
-       Line, 5 Line\n";
+       Options: sub contra, contra, great, small, 1 line, 2 line, 3 line, 4 \
+       line, 5 line\n";
     print_string "\n> ";
     match read_line () with
     | exception End_of_file -> rec_get_valid_octave ""
     | entered_octave -> (
         try rec_get_valid_octave entered_octave
-        with _ -> entered_octave |> rec_get_valid_octave))
+        with _ ->
+          entered_octave |> String.trim |> String.lowercase_ascii
+          |> rec_get_valid_octave))
   else octave
 
 (** [is_valid_key key lst] is true if [key] is an element in [lst] and is false 
@@ -163,13 +165,15 @@ let main () =
     ANSITerminal.print_string [ ANSITerminal.blue ]
       "\n\
        Please enter octave of melody: \n\
-       Options: Sub Contra, Contra, Great, Small, 1 Line, 2 Line, 3 Line, 4 \
-       Line, 5 Line\n";
+       Options: sub contra, contra, great, small, 1 line, 2 line, 3 line, 4 \
+       line, 5 line\n";
 
     print_string "\n> ";
     match read_line () with
     | exception End_of_file -> rec_get_valid_octave ""
-    | entered_octave -> entered_octave |> String.trim |> rec_get_valid_octave
+    | entered_octave ->
+        entered_octave |> String.trim |> String.lowercase_ascii
+        |> rec_get_valid_octave
   in
   let length =
     ANSITerminal.print_string [ ANSITerminal.blue ]
