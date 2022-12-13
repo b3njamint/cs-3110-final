@@ -298,15 +298,15 @@ let activate_audio_player (frequency : float) =
 let rec play_melody (melody : string list) (octave : string) : unit =
   let oct =
     match octave with
-    | "Sub Contra" -> SubContra
-    | "Contra" -> Contra
-    | "Great" -> Great
-    | "Small" -> Small
-    | "1 Line" -> OneLine
-    | "2 Line" -> TwoLine
-    | "3 Line" -> ThreeLine
-    | "4 Line" -> FourLine
-    | "5 Line" -> FiveLine
+    | "sub contra" -> SubContra
+    | "contra" -> Contra
+    | "great" -> Great
+    | "small" -> Small
+    | "1 line" -> OneLine
+    | "2 line" -> TwoLine
+    | "3 line" -> ThreeLine
+    | "4 line" -> FourLine
+    | "5 line" -> FiveLine
     | _ -> raise (UnknownKey octave)
   in
   match melody with
