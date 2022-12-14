@@ -87,7 +87,7 @@ val encode_seed : string -> string -> string -> sounds -> seed -> int list
 
 val decode_seed : string -> string * string * string * sounds * int list
 (** [decode_seed e] uses the same schema used to encode seeds to decode [e] into
-    a tuple of key , tonality, octave, instrument, and note seed. Raises
+    a tuple of key, tonality, octave, instrument, and note seed. Raises
     InvalidEncoding if encoding cannot be decoded. *)
 
 val play_melody : string list -> string -> sounds -> unit

@@ -206,91 +206,33 @@ let rec print_music (delim : string) = function
 let play_melody_from_seed (encoded_seed : string) =
   if String.length encoded_seed < 15 then raise InvalidEncoding
   else
-    let encoded_key = [ encoded_seed.[0]; encoded_seed.[1] ] in
-    let key =
-      match encoded_key with
-      | [ '0'; '0' ] -> "C"
-      | [ '0'; '1' ] -> "C#"
-      | [ '0'; '2' ] -> "D"
-      | [ '0'; '3' ] -> "D#"
-      | [ '0'; '4' ] -> "E"
-      | [ '0'; '5' ] -> "F"
-      | [ '0'; '6' ] -> "F#"
-      | [ '0'; '7' ] -> "G"
-      | [ '0'; '8' ] -> "G#"
-      | [ '0'; '9' ] -> "A"
-      | [ '1'; '0' ] -> "A#"
-      | [ '1'; '1' ] -> "B"
-      | _ -> raise InvalidEncoding
-    in
-    let tonality =
-      match encoded_seed.[2] with
-      | '0' -> "major"
-      | '1' -> "minor"
-      | '2' -> "minor_harmonic"
-      | '3' -> "dorian"
-      | '4' -> "lydian"
-      | '5' -> "mixolydian"
-      | '6' -> "phrygian"
-      | '7' -> "aeolian"
-      | '8' -> "ionian"
-      | '9' -> "locrian"
-      | _ -> raise InvalidEncoding
-    in
-    let octave =
-      match encoded_seed.[3] with
-      | '0' -> "sub contra"
-      | '1' -> "contra"
-      | '2' -> "great"
-      | '3' -> "small"
-      | '4' -> "1 line"
-      | '5' -> "2 line"
-      | '6' -> "3 line"
-      | '7' -> "4 line"
-      | '8' -> "5 line"
-      | _ -> raise InvalidEncoding
-    in
-    let instrument =
-      match encoded_seed.[4] with
-      | '0' -> Sine
-      | '1' -> Square
-      | '2' -> Saw
-      | '3' -> Triangle
-      | _ -> raise InvalidEncoding
-    in
-    let seed_length = String.length encoded_seed - 5 in
-    let str_seed = String.sub encoded_seed 5 seed_length in
-    let seed =
-      str_seed
-      |> String.fold_left (fun acc c -> c :: acc) []
-      |> List.rev |> List.map int_of_char
-      |> List.map (fun i -> i - 48)
-    in
-    let scale =
-      match scale tonality key with
-      | None -> exit 1
-      | Some s -> s
-    in
-    let notes = create_notes piano scale in
-    let melody = create_melody notes seed in
-    ANSITerminal.print_string [ ANSITerminal.green ]
-      "\nHere is your result :)\n\nMelody: ";
-    print_music " " melody;
-    let chords = create_chords piano scale in
-    let left_hand = create_left_hand melody chords seed in
-    ANSITerminal.print_string [ ANSITerminal.green ] "Chords: ";
-    print_music " " left_hand;
-    ANSITerminal.print_string [ ANSITerminal.green ] "Note Sheet: ";
-    let _ = create_melody_note_sheet notes melody in
-    let seed_print =
-      List.map
-        (fun e -> string_of_int e)
-        (encode_seed key tonality octave instrument seed)
-    in
-    ANSITerminal.print_string [ ANSITerminal.green ] "Seed: ";
-    print_music "" seed_print;
-    let _ = play_melody melody octave instrument in
-    exit 0
+    match decode_seed encoded_seed with
+    | key, tonality, octave, instrument, seed ->
+        let scale =
+          match scale tonality key with
+          | None -> exit 1
+          | Some s -> s
+        in
+        let notes = create_notes piano scale in
+        let melody = create_melody notes seed in
+        ANSITerminal.print_string [ ANSITerminal.green ]
+          "\nHere is your result :)\n\nMelody: ";
+        print_music " " melody;
+        let chords = create_chords piano scale in
+        let left_hand = create_left_hand melody chords seed in
+        ANSITerminal.print_string [ ANSITerminal.green ] "Chords: ";
+        print_music " " left_hand;
+        ANSITerminal.print_string [ ANSITerminal.green ] "Note Sheet: ";
+        let _ = create_melody_note_sheet notes melody in
+        let seed_print =
+          List.map
+            (fun e -> string_of_int e)
+            (encode_seed key tonality octave instrument seed)
+        in
+        ANSITerminal.print_string [ ANSITerminal.green ] "Seed: ";
+        print_music "" seed_print;
+        let _ = play_melody melody octave instrument in
+        exit 0
 
 let rec rec_get_valid_seed (input : string) =
   ANSITerminal.print_string [ ANSITerminal.red ]
