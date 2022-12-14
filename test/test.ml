@@ -1,23 +1,23 @@
 open OUnit2
 (** Our approach to testing was to test by OUnit and manually test. Most of the
     functions in music.ml were automatically tested by OUnit including
-    scale_from_json, create_notes, reorder_notes, generate_seed, create_melody,
-    create_chords, create_left_hand, and create_melody_note_sheet. We used glass
-    box testing for the functions in music.ml. For most of the functions stated
-    above, we mainly tested by comparing the expected output of certain inputs
-    to the actual output. In order to test generate_seed, we compared if two
-    outputs for calling the function with the same relatively large input were
-    the same to determine the randomness of the function. We also manually
-    tested many of the functions in music.ml including create_notes,
-    create_chords, and create_melody by printing the notes, initially playing
-    the output on a physical keyboard, and then later directly outputting the
-    sound to determine if the scales were correct and/or the notes sounded
-    proper. We manually tested active_audio_player as well in Music.ml by
-    determining if the sound of the audio outputs were outputting properly. We
-    also used Bisect to see our code coverage and attempted to reach maximum
-    coverage. Therefore, through creating many test cases for most of our
-    functions, manually testing our code, and using bisect, we have demonstrated
-    the correctness of our system. *)
+    scale_from_json, piano_from_json, create_notes, reorder_notes,
+    generate_seed, create_melody, create_chords, create_left_hand, and
+    create_melody_note_sheet. We used glass box testing for the functions in
+    music.ml. For most of the functions stated above, we mainly tested by
+    comparing the expected output of certain inputs to the actual output. In
+    order to test generate_seed, we compared if two outputs for calling the
+    function with the same relatively large input were the same to determine the
+    randomness of the function. We also manually tested many of the functions in
+    music.ml including create_notes, create_chords, and create_melody by
+    printing the notes, initially playing the output on a physical keyboard, and
+    then later directly outputting the sound to determine if the scales were
+    correct and/or the notes sounded proper. We manually tested
+    active_audio_player as well in Music.ml by determining if the sound of the
+    audio outputs were outputting properly. We also used Bisect to see our code
+    coverage and attempted to reach maximum coverage. Therefore, through
+    creating many test cases for most of our functions, manually testing our
+    code, and using bisect, we have demonstrated the correctness of our system. *)
 
 open Music
 
@@ -45,6 +45,7 @@ let pp_list pp_elt lst =
 
 let data_dir_prefix = "data" ^ Filename.dir_sep
 let ton = Yojson.Basic.from_file (data_dir_prefix ^ "tonalities.json")
+let p1 = Yojson.Basic.from_file (data_dir_prefix ^ "piano.json")
 
 (** [scale_from_json_test name json scale key expected_output] constructs an
     OUnit test named [name] that asserts the quality of [expected_output] with
@@ -53,6 +54,15 @@ let scale_from_json_test (name : string) (json : Yojson.Basic.t)
     (scale : string) (key : string) (expected_output : scale option) : test =
   name >:: fun _ ->
   assert_equal expected_output (scale_from_json json scale key)
+
+(** piano_from_json_test name json expected_output] constructs an OUnit test 
+    named [name] that asserts that [expected_output] matches with 
+    piano_from_json json *)
+let piano_from_json_test (name : string) (json : Yojson.Basic.t)
+    (expected_output : string list) : test =
+  name >:: fun _ ->
+  assert_equal expected_output (piano_from_json json)
+    ~printer:(pp_list pp_string)
 
 (** [create_notes_test name input_piano input_scale] constructs an OUnit test
     named [name] that asserts the quality of [expected_output] with
@@ -143,6 +153,9 @@ let music_json_tests =
       (Some { key = "C"; steps = [ 0; 2; 2; 1; 2; 2; 2; 1 ] });
     scale_from_json_test "test a minor" ton "minor" "A"
       (Some { key = "A"; steps = [ 0; 2; 1; 2; 2; 1; 2; 2 ] });
+    scale_from_json_test "test T minor" ton "chicken" "T" None;
+    piano_from_json_test "test piano" p1
+      [ "C"; "C#"; "D"; "D#"; "E"; "F"; "F#"; "G"; "G#"; "A"; "A#"; "B" ];
   ]
 
 let music_tests =
