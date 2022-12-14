@@ -137,6 +137,22 @@ let get_valid_scale (key : string) =
   let scale_name = get_valid_scale_name key in
   match scale scale_name key with None -> exit 1 | Some s -> s
 
+(** [get_valid_instrument instrument] calls [get_valid_scale_name key] to get a 
+    [scale_name] and then gets scale of [scale_name] by calling 
+    [scale scale_name key]. *)
+let get_valid_instrument (instrument : string) =
+  ANSITerminal.print_string [ ANSITerminal.blue ]
+    "\nPlease enter instrument: \nOptions: sine, square, saw, triangle\n";
+  print_string "\n> ";
+  match read_line () with
+  | exception End_of_file -> rec_get_valid_scale_name "" key
+  | entered_instrument -> match entered_instrument with |> String.trim |> String.lowercase_ascii with
+    | "sine" -> Sine
+    | "square" -> Square
+    | "saw" -> Saw
+    | "triangle" -> Triangle
+    | -> Sine
+
 (** [print_music lst] prints the elements in [lst] with spaces in between and 
     then exits. *)
 let rec print_music (delim : string) = function
