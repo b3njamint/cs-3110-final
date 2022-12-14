@@ -109,7 +109,8 @@ let rec rec_get_valid_scale_name (name : string) (key : string) : string =
       ("\nEntered tonality name: " ^ name ^ " is not valid tonality name.\n");
     ANSITerminal.print_string [ ANSITerminal.blue ]
       "\n\
-       Please enter tonality of melody. Options: major; minor; minor_harmonic.\n";
+       Please enter tonality of melody. Options: major; minor; minor_harmonic; \
+       dorian; lydian; mixolydian; phrygian; aeolian; ionian; locrian.\n";
     print_string "\n> ";
     match read_line () with
     | exception End_of_file -> rec_get_valid_scale_name "" key
@@ -124,7 +125,8 @@ let rec rec_get_valid_scale_name (name : string) (key : string) : string =
 let get_valid_scale_name (key : string) =
   ANSITerminal.print_string [ ANSITerminal.blue ]
     "\n\
-     Please enter tonality of melody. Options: major; minor; minor_harmonic.\n";
+     Please enter tonality of melody. Options: major; minor; minor_harmonic; \
+     dorian; lydian; mixolydian; phrygian; aeolian; ionian; locrian.\n";
   print_string "\n> ";
   match read_line () with
   | exception End_of_file -> rec_get_valid_scale_name "" key
@@ -160,7 +162,8 @@ let get_valid_scale (key : string) =
   let scale_name =
     ANSITerminal.print_string [ ANSITerminal.blue ]
       "\n\
-       Please enter tonality of melody. Options: major; minor; minor_harmonic.\n";
+       Please enter tonality of melody. Options: major; minor; minor_harmonic; \
+       dorian; lydian; mixolydian; phrygian; aeolian; ionian; locrian.\n";
     print_string "\n> ";
     match read_line () with
     | exception End_of_file -> rec_get_valid_scale_name "" key
@@ -231,6 +234,13 @@ let encode_seed (key : string) (tonality : string) (octave : string)
     | "major" -> 0
     | "minor" -> 1
     | "minor_harmonic" -> 2
+    | "dorian" -> 3
+    | "lydian" -> 4
+    | "mixolydian" -> 5
+    | "phrygian" -> 6
+    | "aeolian" -> 7
+    | "ionian" -> 8
+    | "locrian" -> 9
     | _ -> raise (UnknownKey tonality)
   in
   let oct =
@@ -250,6 +260,8 @@ let encode_seed (key : string) (tonality : string) (octave : string)
     match instrument with Sine -> 0 | Square -> 1 | Saw -> 2 | Triangle -> 3
   in
   k @ (ton :: oct :: inst :: seed)
+
+let decode_seed (encoded_seed : string) = ()
 
 (** [main] asks user for inputs in terminal and calls functions to create melody
     based on inputs. *)
@@ -283,7 +295,8 @@ let main () =
         ANSITerminal.print_string [ ANSITerminal.blue ]
           "\n\
            Please enter tonality of melody. Options: major; minor; \
-           minor_harmonic.\n";
+           minor_harmonic; dorian; lydian; mixolydian; phrygian; aeolian; \
+           ionian; locrian.\n";
         print_string "\n> ";
         match read_line () with
         | exception End_of_file -> rec_get_valid_scale_name "" key
