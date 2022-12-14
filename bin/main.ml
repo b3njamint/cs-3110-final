@@ -205,60 +205,6 @@ let rec print_music (delim : string) = function
       ANSITerminal.print_string [ ANSITerminal.yellow ] (h ^ delim);
       print_music delim t
 
-let encode_seed (key : string) (tonality : string) (octave : string)
-    (instrument : sounds) (seed : seed) =
-  let k =
-    match key with
-    | "C" -> [ 0; 0 ]
-    | "C#" -> [ 0; 1 ]
-    | "D" -> [ 0; 2 ]
-    | "D#" -> [ 0; 3 ]
-    | "E" -> [ 0; 4 ]
-    | "F" -> [ 0; 5 ]
-    | "F#" -> [ 0; 6 ]
-    | "G" -> [ 0; 7 ]
-    | "G#" -> [ 0; 8 ]
-    | "A" -> [ 0; 9 ]
-    | "A#" -> [ 1; 0 ]
-    | "B" -> [ 1; 1 ]
-    | _ -> raise (UnknownKey key)
-  in
-  let ton =
-    match tonality with
-    | "major" -> 0
-    | "minor" -> 1
-    | "minor_harmonic" -> 2
-    | "dorian" -> 3
-    | "lydian" -> 4
-    | "mixolydian" -> 5
-    | "phrygian" -> 6
-    | "aeolian" -> 7
-    | "ionian" -> 8
-    | "locrian" -> 9
-    | _ -> raise (UnknownKey tonality)
-  in
-  let oct =
-    match octave with
-    | "sub contra" -> 0
-    | "contra" -> 1
-    | "great" -> 2
-    | "small" -> 3
-    | "1 line" -> 4
-    | "2 line" -> 5
-    | "3 line" -> 6
-    | "4 line" -> 7
-    | "5 line" -> 8
-    | _ -> raise (UnknownKey octave)
-  in
-  let inst =
-    match instrument with
-    | Sine -> 0
-    | Square -> 1
-    | Saw -> 2
-    | Triangle -> 3
-  in
-  k @ (ton :: oct :: inst :: seed)
-
 let play_melody_from_seed (encoded_seed : string) =
   if String.length encoded_seed < 15 then raise Invalid_encoding
   else

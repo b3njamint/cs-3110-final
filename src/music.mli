@@ -76,6 +76,12 @@ val create_melody_note_sheet : notes -> string list -> string
 (** [create_melody_note_sheet n m] is the note sheet created from the melody [m]
     and notes [n]. *)
 
+val encode_seed : string -> string -> string -> sounds -> seed -> int list
+(** [encode_seed k t o i s] takes key [k], tonality [t], octave [o], instrument
+    [i], and note seed [s], and returns a list of integers representing an
+    encoded seed which can be used to replicate the exact melody from the input
+    configuration *)
+
 val play_melody : string list -> string -> sounds -> unit
 (** [play_melody m i o] plays melody [m] in octave [o] with instrument [i] using
     the Mm_audio library*)
