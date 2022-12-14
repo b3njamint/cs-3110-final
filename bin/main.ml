@@ -157,7 +157,18 @@ let rec get_valid_option (option : string) =
     [scale_name] and then gets scale of [scale_name] by calling 
     [scale scale_name key]. *)
 let get_valid_scale (key : string) =
-  let scale_name = get_valid_scale_name key in
+  let scale_name =
+    ANSITerminal.print_string [ ANSITerminal.blue ]
+      "\n\
+       Please enter tonality of melody. Options: major; minor; minor_harmonic.\n";
+    print_string "\n> ";
+    match read_line () with
+    | exception End_of_file -> rec_get_valid_scale_name "" key
+    | entered_name ->
+        rec_get_valid_scale_name
+          (String.lowercase_ascii (String.trim entered_name))
+          key
+  in
   match scale scale_name key with None -> exit 1 | Some s -> s
 
 (** [is_valid_instrument instrument] checks if the user instrument input is valid. *)
@@ -197,6 +208,49 @@ let rec print_music (delim : string) = function
       ANSITerminal.print_string [ ANSITerminal.yellow ] (h ^ delim);
       print_music delim t
 
+let encode_seed (key : string) (tonality : string) (octave : string)
+    (instrument : sounds) (seed : seed) =
+  let k =
+    match key with
+    | "C" -> [ 0; 0 ]
+    | "C#" -> [ 0; 1 ]
+    | "D" -> [ 0; 2 ]
+    | "D#" -> [ 0; 3 ]
+    | "E" -> [ 0; 4 ]
+    | "F" -> [ 0; 5 ]
+    | "F#" -> [ 0; 6 ]
+    | "G" -> [ 0; 7 ]
+    | "G#" -> [ 0; 8 ]
+    | "A" -> [ 0; 9 ]
+    | "A#" -> [ 1; 0 ]
+    | "B" -> [ 1; 1 ]
+    | _ -> raise (UnknownKey key)
+  in
+  let ton =
+    match tonality with
+    | "major" -> 0
+    | "minor" -> 1
+    | "minor_harmonic" -> 2
+    | _ -> raise (UnknownKey tonality)
+  in
+  let oct =
+    match octave with
+    | "sub contra" -> 0
+    | "contra" -> 1
+    | "great" -> 2
+    | "small" -> 3
+    | "1 line" -> 4
+    | "2 line" -> 5
+    | "3 line" -> 6
+    | "4 line" -> 7
+    | "5 line" -> 8
+    | _ -> raise (UnknownKey octave)
+  in
+  let inst =
+    match instrument with Sine -> 0 | Square -> 1 | Saw -> 2 | Triangle -> 3
+  in
+  k @ (ton :: oct :: inst :: seed)
+
 (** [main] asks user for inputs in terminal and calls functions to create melody
     based on inputs. *)
 let main () =
@@ -225,7 +279,22 @@ let main () =
             entered_key |> String.trim |> String.uppercase_ascii
             |> rec_get_valid_key
       in
-      let scale = get_valid_scale key in
+      let tonality =
+        ANSITerminal.print_string [ ANSITerminal.blue ]
+          "\n\
+           Please enter tonality of melody. Options: major; minor; \
+           minor_harmonic.\n";
+        print_string "\n> ";
+        match read_line () with
+        | exception End_of_file -> rec_get_valid_scale_name "" key
+        | entered_name ->
+            rec_get_valid_scale_name
+              (String.lowercase_ascii (String.trim entered_name))
+              key
+      in
+      let scale =
+        match scale tonality key with None -> exit 1 | Some s -> s
+      in
       let octave =
         ANSITerminal.print_string [ ANSITerminal.blue ]
           "\n\
@@ -277,7 +346,11 @@ let main () =
       print_music " " left_hand;
       ANSITerminal.print_string [ ANSITerminal.green ] "Note Sheet: ";
       let _ = create_melody_note_sheet notes melody in
-      let seed_print = List.map (fun e -> string_of_int e) seed in
+      let seed_print =
+        List.map
+          (fun e -> string_of_int e)
+          (encode_seed key tonality octave instrument seed)
+      in
       ANSITerminal.print_string [ ANSITerminal.green ] "Seed: ";
       print_music "" seed_print;
       let _ = play_melody melody octave instrument in
