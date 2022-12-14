@@ -290,8 +290,19 @@ let activate_audio_player (frequency : float) (instrument : sounds) =
   let blen = 1024 in
   let buf = Audio.create channels blen in
   let sine =
-    new Audio.Generator.of_mono
-      (new Audio.Mono.Generator.sine sample_rate frequency)
+    match instrument with
+    | Sine ->
+        new Audio.Generator.of_mono
+          (new Audio.Mono.Generator.sine sample_rate frequency)
+    | Square ->
+        new Audio.Generator.of_mono
+          (new Audio.Mono.Generator.square sample_rate frequency)
+    | Saw ->
+        new Audio.Generator.of_mono
+          (new Audio.Mono.Generator.saw sample_rate frequency)
+    | Triangle ->
+        new Audio.Generator.of_mono
+          (new Audio.Mono.Generator.triangle sample_rate frequency)
   in
   for _ = 0 to (sample_rate / blen) - 1 do
     sine#fill buf 0 blen;
