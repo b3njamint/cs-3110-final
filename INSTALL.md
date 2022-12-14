@@ -13,5 +13,6 @@ Follow the steps below in terminal to install/use the melody generator:
 4. To remove build files when done:  
    `$ make clean`
 5. To view documentation html:  
+   `$ dune build @doc`  
    `$ make doc`  
    `$ make opendoc`

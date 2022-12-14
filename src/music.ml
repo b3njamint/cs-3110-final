@@ -72,6 +72,8 @@ let tonalities_from_json json =
       json |> member "tonalities" |> to_list |> List.map tonality_of_json;
   }
 
+[@@@coverage off]
+
 let frequency_of_json json =
   {
     name = json |> member "name" |> to_string;
@@ -90,17 +92,6 @@ let scale_names json =
       if List.mem elt.name acc then acc else elt.name :: acc)
     [] json.tonalities
   |> List.rev
-
-let scale_from_json json scale key =
-  let found_tonalities = tonalities_from_json json in
-  let found_scale =
-    List.find_opt
-      (fun (a : tonality) -> a.name = scale)
-      found_tonalities.tonalities
-  in
-  match found_scale with
-  | None -> None
-  | Some s -> Some { key; steps = s.steps }
 
 let segment_from_json json is_beg : seed =
   Random.self_init ();
@@ -123,6 +114,19 @@ let frequency_from_name name =
       parsed_frequencies.frequencies
   in
   found_frequency.frequency
+
+[@@@coverage on]
+
+let scale_from_json json scale key =
+  let found_tonalities = tonalities_from_json json in
+  let found_scale =
+    List.find_opt
+      (fun (a : tonality) -> a.name = scale)
+      found_tonalities.tonalities
+  in
+  match found_scale with
+  | None -> None
+  | Some s -> Some { key; steps = s.steps }
 
 (** [generate_seed_helper lst length range] is a list of [length] of random ints
     within [0..range-1]. *)
@@ -265,6 +269,8 @@ let create_melody_note_sheet (notes : notes) (melody : string list) : string =
   ANSITerminal.print_string [ ANSITerminal.Bold ] (line ^ "\n");
   line ^ note_lines ^ line
 
+[@@@coverage off]
+
 let activate_audio_player (frequency : float) (instrument : sounds) =
   let channels = 2 in
   let sample_rate = 44100 in
@@ -290,10 +296,8 @@ let activate_audio_player (frequency : float) (instrument : sounds) =
   in
   for _ = 0 to (sample_rate / blen) - 1 do
     sine#fill buf 0 blen;
-    (* wav#write buf 0 blen; *)
     ao#write buf 0 blen
   done;
-  (* wav#close; *)
   ao#close
 
 let rec play_melody (melody : string list) (octave : string)
