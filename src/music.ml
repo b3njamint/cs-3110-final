@@ -43,6 +43,12 @@ type note =
   | As of string
   | B of string
 
+type sounds =
+  | Sine
+  | Square
+  | Saw
+  | Triangle
+
 type tonalities = { tonalities : tonality list }
 type frequencies = { frequencies : named_frequency list }
 type piano = string list
@@ -438,4 +444,4 @@ let rec play_melody (melody : string list) (octave : string)
          activate_audio_player (frequency_from_name "A8") | As, FiveLine ->
          activate_audio_player (frequency_from_name "A#8") | B, FiveLine ->
          activate_audio_player (frequency_from_name "B8")); *)
-      play_melody t octave
+      play_melody t octave instrument

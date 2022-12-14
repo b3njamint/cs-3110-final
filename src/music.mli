@@ -16,7 +16,11 @@ type seed = int list
 (** The list of random indexes that will determine the final set of notes to be
     displayed to the user. *)
 
-type sounds
+type sounds =
+  | Sine
+  | Square
+  | Saw
+  | Triangle
 
 exception UnknownKey of string
 (** Raised when an unknown key is encountered. It carries the value of the

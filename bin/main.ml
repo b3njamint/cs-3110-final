@@ -185,6 +185,26 @@ let main () =
         try rec_get_valid_length (int_of_string entered_length)
         with _ -> rec_get_valid_length ~-1)
   in
+  let instrument =
+    ANSITerminal.print_string [ ANSITerminal.blue ]
+      "\nPlease enter instrument: \nOptions: sine, square, saw, triangle\n";
+    print_string "\n> ";
+    match read_line () with
+    | exception End_of_file -> Sine
+    | entered_instrument -> (
+        try
+          entered_instrument |> String.trim |> String.lowercase_ascii
+          |> rec_get_valid_instrument
+        with _ -> rec_get_valid_instrument ~-1)
+    (* (match
+          entered_instrument |> String.trim |> String.lowercase_ascii
+        with
+       | "sine" -> Sine
+       | "square" -> Square
+       | "saw" -> Saw
+       | "triangle" -> Triangle
+       | _ -> Sine) *)
+  in
   let notes = create_notes piano scale in
   let mid_seg_len =
     length - List.length random_beginning - List.length random_ending
@@ -204,7 +224,7 @@ let main () =
   let seed_print = List.map (fun e -> string_of_int e) seed in
   ANSITerminal.print_string [ ANSITerminal.green ] "Seed: ";
   print_music "" seed_print;
-  let _ = play_melody melody octave in
+  let _ = play_melody melody octave instrument in
   exit 0
 
 let () = main ()
