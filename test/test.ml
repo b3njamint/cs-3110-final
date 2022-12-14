@@ -26,6 +26,15 @@ open Music
 let piano = [ "C"; "C#"; "D"; "D#"; "E"; "F"; "F#"; "G"; "G#"; "A"; "A#"; "B" ]
 let major = [ 0; 2; 2; 1; 2; 2; 2; 1 ]
 let minor = [ 0; 2; 1; 2; 2; 1; 2; 2 ]
+let dorian = [ 0; 2; 1; 2; 2; 2; 1; 2 ]
+let minor_melodic = [ 0; 2; 1; 2; 2; 2; 2; 1 ]
+let minor_harmonic = [ 0; 2; 1; 2; 2; 1; 3; 1 ]
+let lydian = [ 0; 2; 2; 2; 1; 2; 2; 1 ]
+let mixolydian = [ 0; 2; 2; 1; 2; 2; 1; 2 ]
+let phrygian = [ 0; 1; 2; 2; 2; 2; 1; 2 ]
+let aeolian = [ 0; 2; 1; 2; 2; 1; 2; 2 ]
+let ionian = [ 0; 2; 2; 1; 2; 2; 2; 1 ]
+let locrian = [ 0; 1; 2; 1; 2; 2; 2; 2 ]
 
 (** [pp_string s] pretty-prints string [s]. *)
 let pp_string s = "\"" ^ s ^ "\""
@@ -227,6 +236,21 @@ let music_tests =
     create_notes_test "f minor" piano
       { key = "F"; steps = minor }
       [ "F"; "G"; "G#"; "A#"; "C"; "C#"; "D#" ];
+    create_notes_test "c dorian" piano
+      { key = "C"; steps = dorian }
+      [ "C"; "D"; "D#"; "F"; "G"; "A"; "A#" ];
+    create_notes_test "c minor melodic" piano
+      { key = "C"; steps = minor_melodic }
+      [ "C"; "D"; "D#"; "F"; "G"; "A"; "B" ];
+    create_notes_test "c minor harmonic" piano
+      { key = "C"; steps = minor_harmonic }
+      [ "C"; "D"; "D#"; "F"; "G"; "G#"; "B" ];
+    create_notes_test "c lydian" piano
+      { key = "C"; steps = lydian }
+      [ "C"; "D"; "E"; "F#"; "G"; "A"; "B" ];
+    create_notes_test "c mixolydian" piano
+      { key = "C"; steps = mixolydian }
+      [ "C"; "D"; "E"; "F"; "G"; "A"; "A#" ];
     create_melody_test "basic c major melody"
       [ "C"; "D"; "E"; "F"; "G"; "A"; "B" ]
       [
@@ -467,12 +491,18 @@ let music_tests =
       ];
     generate_seed_test_randomness "Randomness of seed: Length: 10, range: 10" 10
       10;
-    generate_seed_test_randomness "Randomness of seed: Length: 10, range: 10" 10
-      10;
     generate_seed_test_randomness "Randomness of seed: Length: 100, range: 9"
       100 9;
     generate_seed_test_randomness "Randomness of seed: Length: 50, range: 100"
       50 100;
+    generate_seed_test_randomness "Randomness of seed: Length: 60, range: 60" 60
+      60;
+    generate_seed_test_randomness "Randomness of seed: Length: 200, range: 50"
+      200 50;
+    generate_seed_test_randomness "Randomness of seed: Length: 25, range: 50" 25
+      50;
+    generate_seed_test_randomness "Randomness of seed: Length: 20, range: 5" 20
+      5;
     generate_seed_test_in_range "In range seeds: Length: 5, range: 7" 5 7;
     generate_seed_test_in_range "In range seeds: Length: 6, range: 100" 6 100;
     generate_seed_test_in_range "In range seeds: Length: 9, range: 50" 6 50;
