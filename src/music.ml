@@ -26,6 +26,12 @@ type named_frequency = {
    string | F of string | Fs of string | G of string | Gs of string | A of
    string | As of string | B of string *)
 
+type sounds =
+  | Sine
+  | Square
+  | Saw
+  | Triangle
+
 type tonalities = { tonalities : tonality list }
 type frequencies = { frequencies : named_frequency list }
 type piano = string list
@@ -259,26 +265,39 @@ let create_melody_note_sheet (notes : notes) (melody : string list) : string =
   ANSITerminal.print_string [ ANSITerminal.Bold ] (line ^ "\n");
   line ^ note_lines ^ line
 
-let activate_audio_player (frequency : float) =
+let activate_audio_player (frequency : float) (instrument : sounds) =
   let channels = 2 in
   let sample_rate = 44100 in
   let ao = new Mm_ao.writer channels sample_rate in
-  let wav = new Audio.IO.Writer.to_wav_file channels sample_rate "out.wav" in
+  (* let wav = new Audio.IO.Writer.to_wav_file channels sample_rate "out.wav"
+     in *)
   let blen = 1024 in
   let buf = Audio.create channels blen in
   let sine =
-    new Audio.Generator.of_mono
-      (new Audio.Mono.Generator.sine sample_rate frequency)
+    match instrument with
+    | Sine ->
+        new Audio.Generator.of_mono
+          (new Audio.Mono.Generator.sine sample_rate frequency)
+    | Square ->
+        new Audio.Generator.of_mono
+          (new Audio.Mono.Generator.square sample_rate frequency)
+    | Saw ->
+        new Audio.Generator.of_mono
+          (new Audio.Mono.Generator.saw sample_rate frequency)
+    | Triangle ->
+        new Audio.Generator.of_mono
+          (new Audio.Mono.Generator.triangle sample_rate frequency)
   in
   for _ = 0 to (sample_rate / blen) - 1 do
     sine#fill buf 0 blen;
-    wav#write buf 0 blen;
+    (* wav#write buf 0 blen; *)
     ao#write buf 0 blen
   done;
-  wav#close;
+  (* wav#close; *)
   ao#close
 
-let rec play_melody (melody : string list) (octave : string) : unit =
+let rec play_melody (melody : string list) (octave : string)
+    (instrument : sounds) : unit =
   let oct =
     match octave with
     | "sub contra" -> "0"
@@ -295,7 +314,7 @@ let rec play_melody (melody : string list) (octave : string) : unit =
   match melody with
   | [] -> ()
   | h :: t ->
-      activate_audio_player (frequency_from_name (h ^ oct));
+      activate_audio_player (frequency_from_name (h ^ oct)) instrument;
       (* (let note = match h with | "C" -> C "C" | "C#" -> Cs "C#" | "D" -> D
          "D" | "D#" -> Ds "D#" | "E" -> E "E" | "F" -> F "F" | "F#" -> Fs "F#" |
          "G" -> G "G" | "G#" -> Gs "G#" | "A" -> A "A" | "A#" -> As "A#" | "B"
@@ -409,4 +428,4 @@ let rec play_melody (melody : string list) (octave : string) : unit =
          activate_audio_player (frequency_from_name "A8") | As, FiveLine ->
          activate_audio_player (frequency_from_name "A#8") | B, FiveLine ->
          activate_audio_player (frequency_from_name "B8")); *)
-      play_melody t octave
+      play_melody t octave instrument

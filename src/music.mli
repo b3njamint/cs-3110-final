@@ -16,6 +16,12 @@ type seed = int list
 (** The list of random indexes that will determine the final set of notes to be
     displayed to the user. *)
 
+type sounds =
+  | Sine
+  | Square
+  | Saw
+  | Triangle  (** The sounds that are supported by the Mm_audio library. *)
+
 exception UnknownKey of string
 (** Raised when an unknown key is encountered. It carries the value of the
     unknown key. *)
@@ -70,5 +76,6 @@ val create_melody_note_sheet : notes -> string list -> string
 (** [create_melody_note_sheet n m] is the note sheet created from the melody [m]
     and notes [n]. *)
 
-val play_melody : string list -> string -> unit
-(** [play_melody m o] plays melody [m] in octave [o] using the Mm_audio library*)
+val play_melody : string list -> string -> sounds -> unit
+(** [play_melody m i o] plays melody [m] in octave [o] with instrument [i] using
+    the Mm_audio library*)

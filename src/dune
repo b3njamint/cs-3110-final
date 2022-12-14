@@ -1,4 +1,6 @@
 (library
  (name music)
  (public_name Music)
- (libraries yojson ANSITerminal mm.audio mm.ao))
+ (libraries yojson ANSITerminal mm.audio mm.ao)
+ (instrumentation
+  (backend bisect_ppx)))

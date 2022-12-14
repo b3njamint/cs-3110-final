@@ -160,6 +160,35 @@ let get_valid_scale (key : string) =
   let scale_name = get_valid_scale_name key in
   match scale scale_name key with None -> exit 1 | Some s -> s
 
+(** [is_valid_instrument instrument] checks if the user instrument input is valid. *)
+let is_valid_instrument (instrument : string) =
+  match instrument |> String.trim |> String.lowercase_ascii with
+  | "sine" | "square" | "saw" | "triangle" -> true
+  | _ -> false
+
+(** [rec_get_valid_instrument name key] continues to ask for [instrument] until it is
+    valid. A valid instrument must cause [is_valid_instrument instrument] to be true. *)
+let rec rec_get_valid_instrument (instrument : string) : sounds =
+  if not (is_valid_instrument instrument) then (
+    ANSITerminal.print_string [ ANSITerminal.red ]
+      ("\nEntered instrument name: " ^ instrument
+     ^ " is not valid instrument name.\n");
+    ANSITerminal.print_string [ ANSITerminal.blue ]
+      "\nPlease enter instrument: \nOptions: sine, square, saw, triangle\n";
+    print_string "\n> ";
+    match read_line () with
+    | exception End_of_file -> rec_get_valid_instrument instrument
+    | entered_instrument ->
+        rec_get_valid_instrument
+          (String.lowercase_ascii (String.trim entered_instrument)))
+  else
+    match instrument with
+    | "sine" -> Sine
+    | "square" -> Square
+    | "saw" -> Saw
+    | "triangle" -> Triangle
+    | _ -> Sine
+
 (** [print_music lst] prints the elements in [lst] with spaces in between and 
     then exits. *)
 let rec print_music (delim : string) = function
@@ -203,7 +232,6 @@ let main () =
            Please enter octave of melody: \n\
            Options: sub contra, contra, great, small, 1 line, 2 line, 3 line, \
            4 line, 5 line\n";
-
         print_string "\n> ";
         match read_line () with
         | exception End_of_file -> rec_get_valid_octave ""
@@ -220,6 +248,18 @@ let main () =
         | entered_length -> (
             try rec_get_valid_length (int_of_string entered_length)
             with _ -> rec_get_valid_length ~-1)
+      in
+      let instrument =
+        ANSITerminal.print_string [ ANSITerminal.blue ]
+          "\nPlease enter instrument: \nOptions: sine, square, saw, triangle\n";
+        print_string "\n> ";
+        match read_line () with
+        | exception End_of_file -> Sine
+        | entered_instrument -> (
+            try
+              entered_instrument |> String.trim |> String.lowercase_ascii
+              |> rec_get_valid_instrument
+            with _ -> rec_get_valid_instrument "")
       in
       let notes = create_notes piano scale in
       let mid_seg_len =
@@ -240,7 +280,7 @@ let main () =
       let seed_print = List.map (fun e -> string_of_int e) seed in
       ANSITerminal.print_string [ ANSITerminal.green ] "Seed: ";
       print_music "" seed_print;
-      let _ = play_melody melody octave in
+      let _ = play_melody melody octave instrument in
       exit 0
   | PlaySeed -> ()
 
