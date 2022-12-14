@@ -24,6 +24,8 @@ let octaves =
     "5 line";
   ]
 
+type option = Generate | PlaySeed
+
 let piano = piano_from_json (Yojson.Basic.from_file piano_file)
 
 let scale (name : string) (key : string) =
@@ -131,6 +133,26 @@ let get_valid_scale_name (key : string) =
         (String.lowercase_ascii (String.trim entered_name))
         key
 
+(** [get_valid_scale_name key] asks for a scale name (aka [entered_name]) and 
+    calls [rec_get_valid_scale_name entered_name key]. *)
+let rec get_valid_option (option : string) =
+  match option with
+  | "1" -> Generate
+  | "2" -> PlaySeed
+  | other -> (
+      ANSITerminal.print_string [ ANSITerminal.red ]
+        ("\nEntered option: " ^ other ^ " is not a valid option.\n");
+      ANSITerminal.print_string [ ANSITerminal.magenta ]
+        "\n\
+         Generate a new melody (1) or play an existing melody from a seed (2)? \
+         (Enter 1/2)\n";
+      print_string "\n> ";
+      match read_line () with
+      | exception End_of_file -> get_valid_option ""
+      | entered_option ->
+          get_valid_option (String.lowercase_ascii (String.trim entered_option))
+      )
+
 (** [get_valid_scale_name key] calls [get_valid_scale_name key] to get a 
     [scale_name] and then gets scale of [scale_name] by calling 
     [scale scale_name key]. *)
@@ -151,61 +173,75 @@ let rec print_music (delim : string) = function
 let main () =
   ANSITerminal.print_string [ ANSITerminal.green ]
     "\n\nWelcome to the melody generator!\n";
-  let key =
-    ANSITerminal.print_string [ ANSITerminal.blue ]
-      "\nPlease enter key of melody.\n";
-    print_string "\n> ";
-    match read_line () with
-    | exception End_of_file -> rec_get_valid_key ""
-    | entered_key ->
-        entered_key |> String.trim |> String.uppercase_ascii
-        |> rec_get_valid_key
-  in
-  let scale = get_valid_scale key in
-  let octave =
-    ANSITerminal.print_string [ ANSITerminal.blue ]
+  let option =
+    ANSITerminal.print_string [ ANSITerminal.magenta ]
       "\n\
-       Please enter octave of melody: \n\
-       Options: sub contra, contra, great, small, 1 line, 2 line, 3 line, 4 \
-       line, 5 line\n";
+       Generate a new melody (1) or play an existing melody from a seed (2)? \
+       (Enter 1 or 2)\n";
+    print_string "\n> ";
+    match read_line () with
+    | exception End_of_file -> get_valid_option ""
+    | entered_option ->
+        get_valid_option (String.lowercase_ascii (String.trim entered_option))
+  in
+  match option with
+  | Generate ->
+      let key =
+        ANSITerminal.print_string [ ANSITerminal.blue ]
+          "\nPlease enter key of melody.\n";
+        print_string "\n> ";
+        match read_line () with
+        | exception End_of_file -> rec_get_valid_key ""
+        | entered_key ->
+            entered_key |> String.trim |> String.uppercase_ascii
+            |> rec_get_valid_key
+      in
+      let scale = get_valid_scale key in
+      let octave =
+        ANSITerminal.print_string [ ANSITerminal.blue ]
+          "\n\
+           Please enter octave of melody: \n\
+           Options: sub contra, contra, great, small, 1 line, 2 line, 3 line, \
+           4 line, 5 line\n";
 
-    print_string "\n> ";
-    match read_line () with
-    | exception End_of_file -> rec_get_valid_octave ""
-    | entered_octave ->
-        entered_octave |> String.trim |> String.lowercase_ascii
-        |> rec_get_valid_octave
-  in
-  let length =
-    ANSITerminal.print_string [ ANSITerminal.blue ]
-      "\nPlease enter length of melody (at least 10).\n";
-    print_string "\n> ";
-    match read_line () with
-    | exception End_of_file -> rec_get_valid_length 0
-    | entered_length -> (
-        try rec_get_valid_length (int_of_string entered_length)
-        with _ -> rec_get_valid_length ~-1)
-  in
-  let notes = create_notes piano scale in
-  let mid_seg_len =
-    length - List.length random_beginning - List.length random_ending
-  in
-  let mid_seed = generate_seed mid_seg_len (List.length notes) in
-  let seed = random_beginning @ mid_seed @ random_ending in
-  let melody = create_melody notes seed in
-  ANSITerminal.print_string [ ANSITerminal.green ]
-    "\nHere is your result :)\n\nMelody: ";
-  print_music " " melody;
-  let chords = create_chords piano scale in
-  let left_hand = create_left_hand melody chords seed in
-  ANSITerminal.print_string [ ANSITerminal.green ] "Chords: ";
-  print_music " " left_hand;
-  ANSITerminal.print_string [ ANSITerminal.green ] "Note Sheet: ";
-  let _ = create_melody_note_sheet notes melody in
-  let seed_print = List.map (fun e -> string_of_int e) seed in
-  ANSITerminal.print_string [ ANSITerminal.green ] "Seed: ";
-  print_music "" seed_print;
-  let _ = play_melody melody octave in
-  exit 0
+        print_string "\n> ";
+        match read_line () with
+        | exception End_of_file -> rec_get_valid_octave ""
+        | entered_octave ->
+            entered_octave |> String.trim |> String.lowercase_ascii
+            |> rec_get_valid_octave
+      in
+      let length =
+        ANSITerminal.print_string [ ANSITerminal.blue ]
+          "\nPlease enter length of melody (at least 10).\n";
+        print_string "\n> ";
+        match read_line () with
+        | exception End_of_file -> rec_get_valid_length 0
+        | entered_length -> (
+            try rec_get_valid_length (int_of_string entered_length)
+            with _ -> rec_get_valid_length ~-1)
+      in
+      let notes = create_notes piano scale in
+      let mid_seg_len =
+        length - List.length random_beginning - List.length random_ending
+      in
+      let mid_seed = generate_seed mid_seg_len (List.length notes) in
+      let seed = random_beginning @ mid_seed @ random_ending in
+      let melody = create_melody notes seed in
+      ANSITerminal.print_string [ ANSITerminal.green ]
+        "\nHere is your result :)\n\nMelody: ";
+      print_music " " melody;
+      let chords = create_chords piano scale in
+      let left_hand = create_left_hand melody chords seed in
+      ANSITerminal.print_string [ ANSITerminal.green ] "Chords: ";
+      print_music " " left_hand;
+      ANSITerminal.print_string [ ANSITerminal.green ] "Note Sheet: ";
+      let _ = create_melody_note_sheet notes melody in
+      let seed_print = List.map (fun e -> string_of_int e) seed in
+      ANSITerminal.print_string [ ANSITerminal.green ] "Seed: ";
+      print_music "" seed_print;
+      let _ = play_melody melody octave in
+      exit 0
+  | PlaySeed -> ()
 
 let () = main ()
