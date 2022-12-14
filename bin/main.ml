@@ -110,8 +110,9 @@ let rec rec_get_valid_scale_name (name : string) (key : string) : string =
       ("\nEntered tonality name: " ^ name ^ " is not valid tonality name.\n");
     ANSITerminal.print_string [ ANSITerminal.blue ]
       "\n\
-       Please enter tonality of melody. Options: major; minor; minor_harmonic; \
-       dorian; lydian; mixolydian; phrygian; aeolian; ionian; locrian.\n";
+       Please enter tonality of melody.\n\
+       Options: major; minor; minor_harmonic; dorian; lydian; mixolydian; \
+       phrygian; aeolian; ionian; locrian.\n";
     print_string "\n> ";
     match read_line () with
     | exception End_of_file -> rec_get_valid_scale_name "" key
@@ -126,8 +127,9 @@ let rec rec_get_valid_scale_name (name : string) (key : string) : string =
 let get_valid_scale_name (key : string) =
   ANSITerminal.print_string [ ANSITerminal.blue ]
     "\n\
-     Please enter tonality of melody. Options: major; minor; minor_harmonic; \
-     dorian; lydian; mixolydian; phrygian; aeolian; ionian; locrian.\n";
+     Please enter tonality of melody. \n\
+     Options: major; minor; minor_harmonic; dorian; lydian; mixolydian; \
+     phrygian; aeolian; ionian; locrian.\n";
   print_string "\n> ";
   match read_line () with
   | exception End_of_file -> rec_get_valid_scale_name "" key
@@ -275,9 +277,9 @@ let main () =
       let tonality =
         ANSITerminal.print_string [ ANSITerminal.blue ]
           "\n\
-           Please enter tonality of melody. Options: major; minor; \
-           minor_harmonic; dorian; lydian; mixolydian; phrygian; aeolian; \
-           ionian; locrian.\n";
+           Please enter tonality of melody.\n\
+           Options: major; minor; minor_harmonic; dorian; lydian; mixolydian; \
+           phrygian; aeolian; ionian; locrian.\n";
         print_string "\n> ";
         match read_line () with
         | exception End_of_file -> rec_get_valid_scale_name "" key
