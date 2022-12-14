@@ -8,8 +8,8 @@ let piano_file = create_file_name "piano"
 let tonalities_file = create_file_name "tonalities"
 let segments_file = create_file_name "segments"
 
-(* Sub Contra, Contra, Great, Small, 1 Line, 2 Line, 3 Line, 4 \
-    Line, 5 Line\n *)
+(* Sub Contra, Contra, Great, Small, 1 Line, 2 Line, 3 Line, 4 \ Line, 5
+   Line\n *)
 
 let octaves =
   [
@@ -72,14 +72,14 @@ let rec rec_get_valid_octave (octave : string) : string =
           |> rec_get_valid_octave))
   else octave
 
-(** [is_valid_key key lst] is true if [key] is an element in [lst] and is false 
+(** [is_valid_key key lst] is true if [key] is an element in [lst] and is false
     otherwise. *)
 let rec is_valid_key (key : string) = function
   | [] -> false
   | h :: t -> if h = key then true else is_valid_key key t
 
-(** [rec_get_valid_key key] continues to ask for [key] until it is
-    valid. A valid key must cause [is_valid_key key] to be true. *)
+(** [rec_get_valid_key key] continues to ask for [key] until it is valid. A
+    valid key must cause [is_valid_key key] to be true. *)
 let rec rec_get_valid_key (key : string) : string =
   if not (is_valid_key key piano) then (
     ANSITerminal.print_string [ ANSITerminal.red ]
@@ -94,10 +94,12 @@ let rec rec_get_valid_key (key : string) : string =
         |> rec_get_valid_key)
   else key
 
-(** [is_valid_scale_name name key] is true if [scale name key] is [Some s] 
-    (aka Some scale) and is false otherwise. *)
+(** [is_valid_scale_name name key] is true if [scale name key] is [Some s] (aka
+    Some scale) and is false otherwise. *)
 let rec is_valid_scale_name (name : string) (key : string) =
-  match scale name key with None -> false | Some s -> true
+  match scale name key with
+  | None -> false
+  | Some s -> true
 
 (** [rec_get_valid_scale_name name key] continues to ask for [name] until it is
     valid. A valid name must cause [is_valid_scale_name name key] to be true. *)
@@ -107,7 +109,8 @@ let rec rec_get_valid_scale_name (name : string) (key : string) : string =
       ("\nEntered tonality name: " ^ name ^ " is not valid tonality name.\n");
     ANSITerminal.print_string [ ANSITerminal.blue ]
       "\n\
-       Please enter tonality of melody. Options: major; minor; minor_harmonic.\n";
+       Please enter tonality of melody. Options: major; minor; minor_harmonic; \
+       dorian; lydian; mixolydian; phrygian; aeolian; ionian; locrian\n";
     print_string "\n> ";
     match read_line () with
     | exception End_of_file -> rec_get_valid_scale_name "" key
@@ -117,12 +120,13 @@ let rec rec_get_valid_scale_name (name : string) (key : string) : string =
           key)
   else name
 
-(** [get_valid_scale_name key] asks for a scale name (aka [entered_name]) and 
+(** [get_valid_scale_name key] asks for a scale name (aka [entered_name]) and
     calls [rec_get_valid_scale_name entered_name key]. *)
 let get_valid_scale_name (key : string) =
   ANSITerminal.print_string [ ANSITerminal.blue ]
     "\n\
-     Please enter tonality of melody. Options: major; minor; minor_harmonic.\n";
+     Please enter tonality of melody. Options: major; minor; minor_harmonic; \
+     dorian; lydian; mixolydian; phrygian; aeolian; ionian; locrian.\n";
   print_string "\n> ";
   match read_line () with
   | exception End_of_file -> rec_get_valid_scale_name "" key
@@ -131,21 +135,25 @@ let get_valid_scale_name (key : string) =
         (String.lowercase_ascii (String.trim entered_name))
         key
 
-(** [get_valid_scale_name key] calls [get_valid_scale_name key] to get a 
-    [scale_name] and then gets scale of [scale_name] by calling 
+(** [get_valid_scale_name key] calls [get_valid_scale_name key] to get a
+    [scale_name] and then gets scale of [scale_name] by calling
     [scale scale_name key]. *)
 let get_valid_scale (key : string) =
   let scale_name = get_valid_scale_name key in
-  match scale scale_name key with None -> exit 1 | Some s -> s
+  match scale scale_name key with
+  | None -> exit 1
+  | Some s -> s
 
-(** [is_valid_instrument instrument] checks if the user instrument input is valid. *)
+(** [is_valid_instrument instrument] checks if the user instrument input is
+    valid. *)
 let is_valid_instrument (instrument : string) =
   match instrument |> String.trim |> String.lowercase_ascii with
   | "sine" | "square" | "saw" | "triangle" -> true
   | _ -> false
 
-(** [rec_get_valid_instrument name key] continues to ask for [instrument] until it is
-    valid. A valid instrument must cause [is_valid_instrument instrument] to be true. *)
+(** [rec_get_valid_instrument name key] continues to ask for [instrument] until
+    it is valid. A valid instrument must cause [is_valid_instrument instrument]
+    to be true. *)
 let rec rec_get_valid_instrument (instrument : string) : sounds =
   if not (is_valid_instrument instrument) then (
     ANSITerminal.print_string [ ANSITerminal.red ]
@@ -167,7 +175,7 @@ let rec rec_get_valid_instrument (instrument : string) : sounds =
     | "triangle" -> Triangle
     | _ -> Sine
 
-(** [print_music lst] prints the elements in [lst] with spaces in between and 
+(** [print_music lst] prints the elements in [lst] with spaces in between and
     then exits. *)
 let rec print_music (delim : string) = function
   | [] -> print_endline "\n"
