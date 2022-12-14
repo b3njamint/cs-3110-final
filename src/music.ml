@@ -18,30 +18,13 @@ type named_frequency = {
   frequency : float;
 }
 
-type octave =
-  | SubContra of string
-  | Contra of string
-  | Great of string
-  | Small of string
-  | OneLine of string
-  | TwoLine of string
-  | ThreeLine of string
-  | FourLine of string
-  | FiveLine of string
+(* type octave = | SubContra of string | Contra of string | Great of string |
+   Small of string | OneLine of string | TwoLine of string | ThreeLine of string
+   | FourLine of string | FiveLine of string
 
-type note =
-  | C of string
-  | Cs of string
-  | D of string
-  | Ds of string
-  | E of string
-  | F of string
-  | Fs of string
-  | G of string
-  | Gs of string
-  | A of string
-  | As of string
-  | B of string
+   type note = | C of string | Cs of string | D of string | Ds of string | E of
+   string | F of string | Fs of string | G of string | Gs of string | A of
+   string | As of string | B of string *)
 
 type tonalities = { tonalities : tonality list }
 type frequencies = { frequencies : named_frequency list }
