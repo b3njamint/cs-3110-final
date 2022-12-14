@@ -43,12 +43,6 @@ type note =
   | As of string
   | B of string
 
-type sounds =
-  | Sine
-  | Square
-  | Saw
-  | Triangle
-
 type tonalities = { tonalities : tonality list }
 type frequencies = { frequencies : named_frequency list }
 type piano = string list
