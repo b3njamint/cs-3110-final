@@ -149,6 +149,16 @@ let create_melody_note_sheet_test (name : string) (notes : notes)
     (create_melody_note_sheet notes melody)
     ~printer:pp_string
 
+(** [create_encode_seed_test name key tonality octave instrument seed expected_output]
+    constructs an OUnit test named [name] that asserts the quality of
+    [expected_output] with [encode_seed key tonality octave instrument seed]. *)
+let create_encode_seed_test (name : string) (key : string) (tonality : string)
+    (octave : string) (instrument : sounds) (seed : seed)
+    (expected_output : int list) : test =
+  name >:: fun _ ->
+  assert_equal expected_output (encode_seed key tonality octave instrument seed)
+(* ~printer:(pp_list pp_int) *)
+
 let music_json_tests =
   [
     scale_from_json_test "test c major" ton "major" "C"
@@ -860,6 +870,154 @@ let music_tests =
        B |                                                             ♩       \
        ♩                              \n\
        --------------------------------------------------------------------------------------------------------\n";
+    create_encode_seed_test
+      "encode seed of F#, mixolydian, 3 line, Triangle, and [0;2;4...1;2;0;]"
+      "F#" "mixolydian" "3 line" Triangle
+      [
+        0;
+        2;
+        4;
+        2;
+        1;
+        3;
+        5;
+        2;
+        1;
+        4;
+        0;
+        6;
+        2;
+        1;
+        6;
+        3;
+        3;
+        2;
+        2;
+        0;
+        4;
+        2;
+        2;
+        2;
+        3;
+        2;
+        0;
+        0;
+        2;
+        2;
+        5;
+        4;
+        3;
+        1;
+        2;
+        0;
+      ]
+      [
+        0;
+        6;
+        5;
+        6;
+        3;
+        0;
+        2;
+        4;
+        2;
+        1;
+        3;
+        5;
+        2;
+        1;
+        4;
+        0;
+        6;
+        2;
+        1;
+        6;
+        3;
+        3;
+        2;
+        2;
+        0;
+        4;
+        2;
+        2;
+        2;
+        3;
+        2;
+        0;
+        0;
+        2;
+        2;
+        5;
+        4;
+        3;
+        1;
+        2;
+        0;
+      ];
+    create_encode_seed_test
+      "encode seed of G, minor_harmonic, sub contra, Saw, and [0;1;2...1;2;0;]"
+      "G" "minor_harmonic" "sub contra" Saw
+      [
+        0;
+        1;
+        2;
+        3;
+        0;
+        2;
+        3;
+        0;
+        3;
+        2;
+        0;
+        0;
+        6;
+        4;
+        5;
+        1;
+        3;
+        1;
+        2;
+        0;
+        1;
+        2;
+        0;
+        1;
+        2;
+        0;
+      ]
+      [
+        0;
+        7;
+        2;
+        0;
+        2;
+        0;
+        1;
+        2;
+        3;
+        0;
+        2;
+        3;
+        0;
+        3;
+        2;
+        0;
+        0;
+        6;
+        4;
+        5;
+        1;
+        3;
+        1;
+        2;
+        0;
+        1;
+        2;
+        0;
+        1;
+        2;
+        0;
+      ];
   ]
 
 let suite =
