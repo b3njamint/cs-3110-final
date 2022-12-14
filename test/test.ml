@@ -157,7 +157,13 @@ let create_encode_seed_test (name : string) (key : string) (tonality : string)
     (expected_output : int list) : test =
   name >:: fun _ ->
   assert_equal expected_output (encode_seed key tonality octave instrument seed)
-(* ~printer:(pp_list pp_int) *)
+
+(** [create_decode_seed_test name seed expected_output] constructs an OUnit test
+    named [name] that asserts the quality of [expected_output] with
+    [decode_seed seed]. *)
+let create_decode_seed_test (name : string) (seed : string)
+    (expected_output : string * string * string * sounds * int list) : test =
+  name >:: fun _ -> assert_equal expected_output (decode_seed seed)
 
 let music_json_tests =
   [
