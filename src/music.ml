@@ -43,6 +43,12 @@ type note =
   | As of string
   | B of string
 
+type sounds =
+  | Sine
+  | Square
+  | Saw
+  | Triangle
+
 type tonalities = { tonalities : tonality list }
 type frequencies = { frequencies : named_frequency list }
 type piano = string list
@@ -276,7 +282,7 @@ let create_melody_note_sheet (notes : notes) (melody : string list) : string =
   ANSITerminal.print_string [ ANSITerminal.Bold ] (line ^ "\n");
   line ^ note_lines ^ line
 
-let activate_audio_player (frequency : float) =
+let activate_audio_player (frequency : float) (instrument : sounds) =
   let channels = 2 in
   let sample_rate = 44100 in
   let ao = new Mm_ao.writer channels sample_rate in
@@ -295,7 +301,8 @@ let activate_audio_player (frequency : float) =
   wav#close;
   ao#close
 
-let rec play_melody (melody : string list) (octave : string) : unit =
+let rec play_melody (melody : string list) (octave : string)
+    (instrument : sounds) : unit =
   let oct =
     match octave with
     | "sub contra" -> "0"
@@ -312,7 +319,7 @@ let rec play_melody (melody : string list) (octave : string) : unit =
   match melody with
   | [] -> ()
   | h :: t ->
-      activate_audio_player (frequency_from_name (h ^ oct));
+      activate_audio_player (frequency_from_name (h ^ oct)) instrument;
       (* (let note = match h with | "C" -> C "C" | "C#" -> Cs "C#" | "D" -> D
          "D" | "D#" -> Ds "D#" | "E" -> E "E" | "F" -> F "F" | "F#" -> Fs "F#" |
          "G" -> G "G" | "G#" -> Gs "G#" | "A" -> A "A" | "A#" -> As "A#" | "B"
