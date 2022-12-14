@@ -1165,6 +1165,40 @@ let music_tests =
         0;
       ];
     create_decode_seed_test
+      "create decode_seed test for seed 000000000000000000000000000000"
+      "000000000000000000000000000000"
+      ( "C",
+        "major",
+        "sub contra",
+        Sine,
+        [
+          0;
+          0;
+          0;
+          0;
+          0;
+          0;
+          0;
+          0;
+          0;
+          0;
+          0;
+          0;
+          0;
+          0;
+          0;
+          0;
+          0;
+          0;
+          0;
+          0;
+          0;
+          0;
+          0;
+          0;
+          0;
+        ] );
+    create_decode_seed_test
       "create decode_seed test for seed \
        06563024213521406216332204222320022543120"
       "06563024213521406216332204222320022543120"
