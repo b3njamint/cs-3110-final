@@ -955,6 +955,68 @@ let music_tests =
        ♩           ♩       ♩                    \n\
        --------------------------------------------------------------------------------------------------------\n";
     create_encode_seed_test
+      "encode seed of C, major, sub contra, Sine, and [0;0;0...0;0;0]" "C"
+      "major" "sub contra" Sine
+      [
+        0;
+        0;
+        0;
+        0;
+        0;
+        0;
+        0;
+        0;
+        0;
+        0;
+        0;
+        0;
+        0;
+        0;
+        0;
+        0;
+        0;
+        0;
+        0;
+        0;
+        0;
+        0;
+        0;
+        0;
+        0;
+      ]
+      [
+        0;
+        0;
+        0;
+        0;
+        0;
+        0;
+        0;
+        0;
+        0;
+        0;
+        0;
+        0;
+        0;
+        0;
+        0;
+        0;
+        0;
+        0;
+        0;
+        0;
+        0;
+        0;
+        0;
+        0;
+        0;
+        0;
+        0;
+        0;
+        0;
+        0;
+      ];
+    create_encode_seed_test
       "encode seed of F#, mixolydian, 3 line, Triangle, and [0;2;4...1;2;0;]"
       "F#" "mixolydian" "3 line" Triangle
       [
