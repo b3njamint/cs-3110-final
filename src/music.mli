@@ -20,7 +20,7 @@ type sounds =
   | Sine
   | Square
   | Saw
-  | Triangle
+  | Triangle  (** The sounds that are supported by the Mm_audio library. *)
 
 exception UnknownKey of string
 (** Raised when an unknown key is encountered. It carries the value of the
@@ -77,4 +77,5 @@ val create_melody_note_sheet : notes -> string list -> string
     and notes [n]. *)
 
 val play_melody : string list -> string -> sounds -> unit
-(** [play_melody m o] plays melody [m] in octave [o] using the Mm_audio library*)
+(** [play_melody m i o] plays melody [m] in octave [o] with instrument [i] using
+    the Mm_audio library*)
