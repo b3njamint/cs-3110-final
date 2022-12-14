@@ -165,6 +165,13 @@ let create_decode_seed_test (name : string) (seed : string)
     (expected_output : string * string * string * sounds * int list) : test =
   name >:: fun _ -> assert_equal expected_output (decode_seed seed)
 
+(** [decode_seed_exception_test name invalid_seed] constructs an OUnit test
+    named [name] that asserts the raising of an InvalidEncoding exception when
+    [decode_seed] is given an invalid input [invalid_seed]. *)
+let decode_seed_exception_test (name : string) (invalid_seed : string) : test =
+  name >:: fun _ ->
+  assert_raises InvalidEncoding (fun () -> decode_seed invalid_seed)
+
 let music_json_tests =
   [
     scale_from_json_test "test c major" ton "major" "C"
@@ -178,6 +185,12 @@ let music_json_tests =
 
 let music_tests =
   [
+    decode_seed_exception_test "invalid seed length" "00";
+    decode_seed_exception_test "non-integer seed"
+      "asdfksdojfiahsudfuisdfskdfaksjdfosifjd";
+    decode_seed_exception_test "invalid encoding" "999999999999999999";
+    decode_seed_exception_test "invalid seed"
+      "000001347829867086097806798967879068";
     create_notes_test "c major" piano
       { key = "C"; steps = major }
       [ "C"; "D"; "E"; "F"; "G"; "A"; "B" ];

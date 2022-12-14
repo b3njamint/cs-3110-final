@@ -204,35 +204,33 @@ let rec print_music (delim : string) = function
       print_music delim t
 
 let play_melody_from_seed (encoded_seed : string) =
-  if String.length encoded_seed < 15 then raise InvalidEncoding
-  else
-    match decode_seed encoded_seed with
-    | key, tonality, octave, instrument, seed ->
-        let scale =
-          match scale tonality key with
-          | None -> exit 1
-          | Some s -> s
-        in
-        let notes = create_notes piano scale in
-        let melody = create_melody notes seed in
-        ANSITerminal.print_string [ ANSITerminal.green ]
-          "\nHere is your result :)\n\nMelody: ";
-        print_music " " melody;
-        let chords = create_chords piano scale in
-        let left_hand = create_left_hand melody chords seed in
-        ANSITerminal.print_string [ ANSITerminal.green ] "Chords: ";
-        print_music " " left_hand;
-        ANSITerminal.print_string [ ANSITerminal.green ] "Note Sheet: ";
-        let _ = create_melody_note_sheet notes melody in
-        let seed_print =
-          List.map
-            (fun e -> string_of_int e)
-            (encode_seed key tonality octave instrument seed)
-        in
-        ANSITerminal.print_string [ ANSITerminal.green ] "Seed: ";
-        print_music "" seed_print;
-        let _ = play_melody melody octave instrument in
-        exit 0
+  match decode_seed encoded_seed with
+  | key, tonality, octave, instrument, seed ->
+      let scale =
+        match scale tonality key with
+        | None -> exit 1
+        | Some s -> s
+      in
+      let notes = create_notes piano scale in
+      let melody = create_melody notes seed in
+      ANSITerminal.print_string [ ANSITerminal.green ]
+        "\nHere is your result :)\n\nMelody: ";
+      print_music " " melody;
+      let chords = create_chords piano scale in
+      let left_hand = create_left_hand melody chords seed in
+      ANSITerminal.print_string [ ANSITerminal.green ] "Chords: ";
+      print_music " " left_hand;
+      ANSITerminal.print_string [ ANSITerminal.green ] "Note Sheet: ";
+      let _ = create_melody_note_sheet notes melody in
+      let seed_print =
+        List.map
+          (fun e -> string_of_int e)
+          (encode_seed key tonality octave instrument seed)
+      in
+      ANSITerminal.print_string [ ANSITerminal.green ] "Seed: ";
+      print_music "" seed_print;
+      let _ = play_melody melody octave instrument in
+      exit 0
 
 let rec rec_get_valid_seed (input : string) =
   ANSITerminal.print_string [ ANSITerminal.red ]

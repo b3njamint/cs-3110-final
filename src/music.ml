@@ -320,69 +320,71 @@ let encode_seed (key : string) (tonality : string) (octave : string)
 
 let decode_seed (encoded_seed : string) :
     string * string * string * sounds * int list =
-  let encoded_key = [ encoded_seed.[0]; encoded_seed.[1] ] in
-  let key =
-    match encoded_key with
-    | [ '0'; '0' ] -> "C"
-    | [ '0'; '1' ] -> "C#"
-    | [ '0'; '2' ] -> "D"
-    | [ '0'; '3' ] -> "D#"
-    | [ '0'; '4' ] -> "E"
-    | [ '0'; '5' ] -> "F"
-    | [ '0'; '6' ] -> "F#"
-    | [ '0'; '7' ] -> "G"
-    | [ '0'; '8' ] -> "G#"
-    | [ '0'; '9' ] -> "A"
-    | [ '1'; '0' ] -> "A#"
-    | [ '1'; '1' ] -> "B"
-    | _ -> raise InvalidEncoding
-  in
-  let tonality =
-    match encoded_seed.[2] with
-    | '0' -> "major"
-    | '1' -> "minor"
-    | '2' -> "minor_harmonic"
-    | '3' -> "dorian"
-    | '4' -> "lydian"
-    | '5' -> "mixolydian"
-    | '6' -> "phrygian"
-    | '7' -> "aeolian"
-    | '8' -> "ionian"
-    | '9' -> "locrian"
-    | _ -> raise InvalidEncoding
-  in
-  let octave =
-    match encoded_seed.[3] with
-    | '0' -> "sub contra"
-    | '1' -> "contra"
-    | '2' -> "great"
-    | '3' -> "small"
-    | '4' -> "1 line"
-    | '5' -> "2 line"
-    | '6' -> "3 line"
-    | '7' -> "4 line"
-    | '8' -> "5 line"
-    | _ -> raise InvalidEncoding
-  in
-  let instrument =
-    match encoded_seed.[4] with
-    | '0' -> Sine
-    | '1' -> Square
-    | '2' -> Saw
-    | '3' -> Triangle
-    | _ -> raise InvalidEncoding
-  in
-  let seed_length = String.length encoded_seed - 5 in
-  let str_seed = String.sub encoded_seed 5 seed_length in
-  let seed =
-    str_seed
-    |> String.fold_left (fun acc c -> c :: acc) []
-    |> List.rev |> List.map int_of_char
-    |> List.map (fun i -> i - 48)
-  in
-  if List.for_all (fun e -> e >= 0 && e <= 6) seed then
-    (key, tonality, octave, instrument, seed)
-  else raise InvalidEncoding
+  if String.length encoded_seed < 15 then raise InvalidEncoding
+  else
+    let encoded_key = [ encoded_seed.[0]; encoded_seed.[1] ] in
+    let key =
+      match encoded_key with
+      | [ '0'; '0' ] -> "C"
+      | [ '0'; '1' ] -> "C#"
+      | [ '0'; '2' ] -> "D"
+      | [ '0'; '3' ] -> "D#"
+      | [ '0'; '4' ] -> "E"
+      | [ '0'; '5' ] -> "F"
+      | [ '0'; '6' ] -> "F#"
+      | [ '0'; '7' ] -> "G"
+      | [ '0'; '8' ] -> "G#"
+      | [ '0'; '9' ] -> "A"
+      | [ '1'; '0' ] -> "A#"
+      | [ '1'; '1' ] -> "B"
+      | _ -> raise InvalidEncoding
+    in
+    let tonality =
+      match encoded_seed.[2] with
+      | '0' -> "major"
+      | '1' -> "minor"
+      | '2' -> "minor_harmonic"
+      | '3' -> "dorian"
+      | '4' -> "lydian"
+      | '5' -> "mixolydian"
+      | '6' -> "phrygian"
+      | '7' -> "aeolian"
+      | '8' -> "ionian"
+      | '9' -> "locrian"
+      | _ -> raise InvalidEncoding
+    in
+    let octave =
+      match encoded_seed.[3] with
+      | '0' -> "sub contra"
+      | '1' -> "contra"
+      | '2' -> "great"
+      | '3' -> "small"
+      | '4' -> "1 line"
+      | '5' -> "2 line"
+      | '6' -> "3 line"
+      | '7' -> "4 line"
+      | '8' -> "5 line"
+      | _ -> raise InvalidEncoding
+    in
+    let instrument =
+      match encoded_seed.[4] with
+      | '0' -> Sine
+      | '1' -> Square
+      | '2' -> Saw
+      | '3' -> Triangle
+      | _ -> raise InvalidEncoding
+    in
+    let seed_length = String.length encoded_seed - 5 in
+    let str_seed = String.sub encoded_seed 5 seed_length in
+    let seed =
+      str_seed
+      |> String.fold_left (fun acc c -> c :: acc) []
+      |> List.rev |> List.map int_of_char
+      |> List.map (fun i -> i - 48)
+    in
+    if List.for_all (fun e -> e >= 0 && e <= 6) seed then
+      (key, tonality, octave, instrument, seed)
+    else raise InvalidEncoding
 
 let activate_audio_player (frequency : float) (instrument : sounds) =
   let channels = 2 in
