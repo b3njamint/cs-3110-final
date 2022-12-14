@@ -137,21 +137,36 @@ let get_valid_scale (key : string) =
   let scale_name = get_valid_scale_name key in
   match scale scale_name key with None -> exit 1 | Some s -> s
 
-(** [get_valid_instrument instrument] calls [get_valid_scale_name key] to get a 
+(** TODO!!!! [is_valid_instrument instrument] calls [get_valid_scale_name key] to get a 
     [scale_name] and then gets scale of [scale_name] by calling 
     [scale scale_name key]. *)
-let get_valid_instrument (instrument : string) =
-  ANSITerminal.print_string [ ANSITerminal.blue ]
-    "\nPlease enter instrument: \nOptions: sine, square, saw, triangle\n";
-  print_string "\n> ";
-  match read_line () with
-  | exception End_of_file -> rec_get_valid_scale_name "" key
-  | entered_instrument -> match entered_instrument with |> String.trim |> String.lowercase_ascii with
+let is_valid_instrument (instrument : string) =
+  match instrument |> String.trim |> String.lowercase_ascii with
+  | "sine" | "square" | "saw" | "triangle" -> true
+  | _ -> false
+
+(** TODO!!! [rec_get_valid_scale_name name key] continues to ask for [name] until it is
+    valid. A valid name must cause [is_valid_scale_name name key] to be true. *)
+let rec rec_get_valid_instrument (instrument : string) : sounds =
+  if not (is_valid_instrument instrument) then (
+    ANSITerminal.print_string [ ANSITerminal.red ]
+      ("\nEntered instrument name: " ^ instrument
+     ^ " is not valid instrument name.\n");
+    ANSITerminal.print_string [ ANSITerminal.blue ]
+      "\nPlease enter instrument: \nOptions: sine, square, saw, triangle\n";
+    print_string "\n> ";
+    match read_line () with
+    | exception End_of_file -> rec_get_valid_instrument instrument
+    | entered_instrument ->
+        rec_get_valid_instrument
+          (String.lowercase_ascii (String.trim entered_instrument)))
+  else
+    match instrument with
     | "sine" -> Sine
     | "square" -> Square
     | "saw" -> Saw
     | "triangle" -> Triangle
-    | -> Sine
+    | _ -> Sine
 
 (** [print_music lst] prints the elements in [lst] with spaces in between and 
     then exits. *)
@@ -211,15 +226,7 @@ let main () =
         try
           entered_instrument |> String.trim |> String.lowercase_ascii
           |> rec_get_valid_instrument
-        with _ -> rec_get_valid_instrument ~-1)
-    (* (match
-          entered_instrument |> String.trim |> String.lowercase_ascii
-        with
-       | "sine" -> Sine
-       | "square" -> Square
-       | "saw" -> Saw
-       | "triangle" -> Triangle
-       | _ -> Sine) *)
+        with _ -> rec_get_valid_instrument "")
   in
   let notes = create_notes piano scale in
   let mid_seg_len =
