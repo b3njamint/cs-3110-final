@@ -8,16 +8,18 @@ open OUnit2
     comparing the expected output of certain inputs to the actual output. In
     order to test generate_seed, we compared if two outputs for calling the
     function with the same relatively large input were the same to determine the
-    randomness of the function. We also manually tested many of the functions in
-    music.ml including create_notes, create_chords, and create_melody by
-    printing the notes, initially playing the output on a physical keyboard, and
-    then later directly outputting the sound to determine if the scales were
-    correct and/or the notes sounded proper. We manually tested
-    active_audio_player as well in Music.ml by determining if the sound of the
-    audio outputs were outputting properly. We also used Bisect to see our code
-    coverage and attempted to reach maximum coverage. Therefore, through
-    creating many test cases for most of our functions, manually testing our
-    code, and using bisect, we have demonstrated the correctness of our system. *)
+    randomness of the function. Another example is for generate left hand, in
+    which we tested specifying the seed being used. We also manually tested many
+    of the functions in music.ml including create_notes, create_chords, and
+    create_melody by printing the notes, initially playing the output on a
+    physical keyboard, and then later directly outputting the sound to determine
+    if the scales were correct and/or the notes sounded proper. We manually
+    tested active_audio_player as well in Music.ml by determining if the sound
+    of the audio outputs were outputting properly. We also used Bisect to see
+    our code coverage and attempted to reach maximum coverage. Therefore,
+    through creating many test cases for most of our functions, manually testing
+    our code, and using bisect, we have demonstrated the correctness of our
+    system. *)
 
 open Music
 
@@ -470,6 +472,22 @@ let music_tests =
     create_chords_test "chords for random G major melody" piano
       { key = "G"; steps = major }
       [ "(G,B,D)"; "(C,E,G)"; "(D,F#,A)" ];
+    create_left_hand_test "Chords for seed: 333"
+      [ "C"; "D"; "E"; "F"; "G"; "A"; "B"; "C" ]
+      [ "CEG"; "FAC"; "BDF" ] [ 3; 3; 3 ] [ "CEG"; "CEG" ];
+    create_left_hand_test "Chords for seed: 451626423"
+      [ "C"; "D"; "E"; "F"; "G"; "A"; "B"; "C" ]
+      [ "CEG"; "FAC"; "BDF" ]
+      [ 4; 5; 1; 6; 2; 6; 4; 2; 3 ]
+      [ "FAC"; "BDF" ];
+    create_left_hand_test "Chords for seed: 1313"
+      [ "A"; "B"; "C"; "D"; "E" ]
+      [ "ACE"; "DFA"; "GBE" ] [ 1; 3; 1; 3 ] [ "DFA"; "ACE" ];
+    create_left_hand_test "Chords for seed: 12344321"
+      [ "C"; "D"; "E"; "F"; "G"; "A"; "B"; "C"; "E"; "A" ]
+      [ "CEG"; "FAC"; "BDF"; "ACE"; "DFA" ]
+      [ 1; 2; 3; 4; 4; 3; 2; 1 ]
+      [ "FAC"; "BDF"; "CEG"; "FAC" ];
     reorder_notes_test "reorder d major" piano
       { key = "D"; steps = major }
       (index_of_start "D" (create_notes piano { key = "D"; steps = major }))
