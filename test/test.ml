@@ -181,6 +181,16 @@ let decode_seed_exception_test (name : string) (invalid_seed : string) : test =
   name >:: fun _ ->
   assert_raises InvalidEncoding (fun () -> decode_seed invalid_seed)
 
+(** [play_melody_exception_test name melody invalid_octave instrument]
+    constructs an OUnit test named [name] that asserts the raising of an
+    UnknownKey exception when [play_melody] is given an invalid input
+    [invalid_octave]. *)
+let play_melody_exception_test (name : string) (melody : string list)
+    (invalid_octave : string) (instrument : sounds) : test =
+  name >:: fun _ ->
+  assert_raises (UnknownKey invalid_octave) (fun () ->
+      play_melody melody invalid_octave instrument)
+
 let music_json_tests =
   [
     scale_from_json_test "test c major" ton "major" "C"
