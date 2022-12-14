@@ -275,7 +275,8 @@ let activate_audio_player (frequency : float) (instrument : sounds) =
   let channels = 2 in
   let sample_rate = 44100 in
   let ao = new Mm_ao.writer channels sample_rate in
-  let wav = new Audio.IO.Writer.to_wav_file channels sample_rate "out.wav" in
+  (* let wav = new Audio.IO.Writer.to_wav_file channels sample_rate "out.wav"
+     in *)
   let blen = 1024 in
   let buf = Audio.create channels blen in
   let sine =
@@ -295,7 +296,6 @@ let activate_audio_player (frequency : float) (instrument : sounds) =
   in
   for _ = 0 to (sample_rate / blen) - 1 do
     sine#fill buf 0 blen;
-    wav#write buf 0 blen;
     ao#write buf 0 blen
   done;
   ao#close
