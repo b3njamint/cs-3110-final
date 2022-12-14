@@ -316,11 +316,11 @@ let play_melody_from_seed (encoded_seed : string) =
     in
     let seed_length = String.length encoded_seed - 5 in
     let str_seed = String.sub encoded_seed 5 seed_length in
-    print_string str_seed;
     let seed =
       str_seed
       |> String.fold_left (fun acc c -> c :: acc) []
       |> List.rev |> List.map int_of_char
+      |> List.map (fun i -> i - 48)
     in
     let scale =
       match scale tonality key with
