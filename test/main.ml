@@ -44,6 +44,9 @@ let create_notes_test (name : string) (input_piano : piano)
     (create_notes input_piano input_scale)
     ~printer:(pp_list pp_string)
 
+(** [reorder_notes_test name input_paino input_scale input_point] constructs an
+    OUnit test named [name] that asserts the quality of [expected_output] with
+    [reorder_notes input_piano input_scale_input_point]. *)
 let reorder_notes_test (name : string) (input_piano : piano)
     (input_scale : scale) (input_point : int) (expected_output : string list) :
     test =
