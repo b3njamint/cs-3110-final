@@ -182,9 +182,6 @@ let rec acc_create_notes (curr_index : int) (piano : piano)
       if hi = curr_index then hp :: acc_create_notes (curr_index + 1) tp ti
       else acc_create_notes (curr_index + 1) tp (hi :: ti)
 
-let create_notes (piano : piano) (scale : scale) : notes =
-  sorted_note_indexes piano scale |> acc_create_notes 0 piano
-
 let rec reorder_notes (list : notes) (point : int) : notes =
   if point = 0 then list
   else
@@ -199,14 +196,17 @@ let index_of_start e lst =
   in
   index_rec 0 lst
 
+let create_notes (piano : piano) (scale : scale) : notes =
+  let unsorted_notes =
+    sorted_note_indexes piano scale |> acc_create_notes 0 piano
+  in
+  reorder_notes unsorted_notes (index_of_start scale.key unsorted_notes)
+
 let create_single_chord (index : int) (notes : notes) : string =
   "(" ^ List.nth notes 0 ^ "," ^ List.nth notes 2 ^ "," ^ List.nth notes 2 ^ ")"
 
 let create_chords (piano : piano) (scale : scale) : string list =
-  let notes =
-    reorder_notes (create_notes piano scale)
-      (index_of_start scale.key (create_notes piano scale))
-  in
+  let notes = create_notes piano scale in
   let chord_I =
     "(" ^ List.nth notes 0 ^ "," ^ List.nth notes 2 ^ "," ^ List.nth notes 4
     ^ ")"
