@@ -44,6 +44,9 @@ let create_notes_test (name : string) (input_piano : piano)
     (create_notes input_piano input_scale)
     ~printer:(pp_list pp_string)
 
+(** [reorder_notes_test name input_paino input_scale input_point] constructs an
+    OUnit test named [name] that asserts the quality of [expected_output] with
+    [reorder_notes input_piano input_scale_input_point]. *)
 let reorder_notes_test (name : string) (input_piano : piano)
     (input_scale : scale) (input_point : int) (expected_output : string list) :
     test =
@@ -129,43 +132,43 @@ let music_tests =
       [ "C"; "D"; "E"; "F"; "G"; "A"; "B" ];
     create_notes_test "g major" piano
       { key = "G"; steps = major }
-      [ "C"; "D"; "E"; "F#"; "G"; "A"; "B" ];
+      [ "G"; "A"; "B"; "C"; "D"; "E"; "F#" ];
     create_notes_test "d major" piano
       { key = "D"; steps = major }
-      [ "C#"; "D"; "E"; "F#"; "G"; "A"; "B" ];
+      [ "D"; "E"; "F#"; "G"; "A"; "B"; "C#" ];
     create_notes_test "a major" piano
       { key = "A"; steps = major }
-      [ "C#"; "D"; "E"; "F#"; "G#"; "A"; "B" ];
+      [ "A"; "B"; "C#"; "D"; "E"; "F#"; "G#" ];
     create_notes_test "e major" piano
       { key = "E"; steps = major }
-      [ "C#"; "D#"; "E"; "F#"; "G#"; "A"; "B" ];
+      [ "E"; "F#"; "G#"; "A"; "B"; "C#"; "D#" ];
     create_notes_test "b major" piano
       { key = "B"; steps = major }
-      [ "C#"; "D#"; "E"; "F#"; "G#"; "A#"; "B" ];
+      [ "B"; "C#"; "D#"; "E"; "F#"; "G#"; "A#" ];
     create_notes_test "f major" piano
       { key = "F"; steps = major }
-      [ "C"; "D"; "E"; "F"; "G"; "A"; "A#" ];
+      [ "F"; "G"; "A"; "A#"; "C"; "D"; "E" ];
     create_notes_test "a minor" piano
       { key = "A"; steps = minor }
-      [ "C"; "D"; "E"; "F"; "G"; "A"; "B" ];
+      [ "A"; "B"; "C"; "D"; "E"; "F"; "G" ];
     create_notes_test "e minor" piano
       { key = "E"; steps = minor }
-      [ "C"; "D"; "E"; "F#"; "G"; "A"; "B" ];
+      [ "E"; "F#"; "G"; "A"; "B"; "C"; "D" ];
     create_notes_test "b minor" piano
       { key = "B"; steps = minor }
-      [ "C#"; "D"; "E"; "F#"; "G"; "A"; "B" ];
+      [ "B"; "C#"; "D"; "E"; "F#"; "G"; "A" ];
     create_notes_test "d minor" piano
       { key = "D"; steps = minor }
-      [ "C"; "D"; "E"; "F"; "G"; "A"; "A#" ];
+      [ "D"; "E"; "F"; "G"; "A"; "A#"; "C" ];
     create_notes_test "g minor" piano
       { key = "G"; steps = minor }
-      [ "C"; "D"; "D#"; "F"; "G"; "A"; "A#" ];
+      [ "G"; "A"; "A#"; "C"; "D"; "D#"; "F" ];
     create_notes_test "c minor" piano
       { key = "C"; steps = minor }
       [ "C"; "D"; "D#"; "F"; "G"; "G#"; "A#" ];
     create_notes_test "f minor" piano
       { key = "F"; steps = minor }
-      [ "C"; "C#"; "D#"; "F"; "G"; "G#"; "A#" ];
+      [ "F"; "G"; "G#"; "A#"; "C"; "C#"; "D#" ];
     create_melody_test "basic c major melody"
       [ "C"; "D"; "E"; "F"; "G"; "A"; "B" ]
       [
