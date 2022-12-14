@@ -19,29 +19,29 @@ type named_frequency = {
 }
 
 type octave =
-  | SubContra
-  | Contra
-  | Great
-  | Small
-  | OneLine
-  | TwoLine
-  | ThreeLine
-  | FourLine
-  | FiveLine
+  | SubContra of string
+  | Contra of string
+  | Great of string
+  | Small of string
+  | OneLine of string
+  | TwoLine of string
+  | ThreeLine of string
+  | FourLine of string
+  | FiveLine of string
 
 type note =
-  | C
-  | Cs
-  | D
-  | Ds
-  | E
-  | F
-  | Fs
-  | G
-  | Gs
-  | A
-  | As
-  | B
+  | C of string
+  | Cs of string
+  | D of string
+  | Ds of string
+  | E of string
+  | F of string
+  | Fs of string
+  | G of string
+  | Gs of string
+  | A of string
+  | As of string
+  | B of string
 
 type tonalities = { tonalities : tonality list }
 type frequencies = { frequencies : named_frequency list }
@@ -298,143 +298,132 @@ let activate_audio_player (frequency : float) =
 let rec play_melody (melody : string list) (octave : string) : unit =
   let oct =
     match octave with
-    | "sub contra" -> SubContra
-    | "contra" -> Contra
-    | "great" -> Great
-    | "small" -> Small
-    | "1 line" -> OneLine
-    | "2 line" -> TwoLine
-    | "3 line" -> ThreeLine
-    | "4 line" -> FourLine
-    | "5 line" -> FiveLine
+    | "sub contra" -> "0"
+    | "contra" -> "1"
+    | "great" -> "2"
+    | "small" -> "3"
+    | "1 line" -> "4"
+    | "2 line" -> "5"
+    | "3 line" -> "6"
+    | "4 line" -> "7"
+    | "5 line" -> "8"
     | _ -> raise (UnknownKey octave)
   in
   match melody with
   | [] -> ()
   | h :: t ->
-      (let note =
-         match h with
-         | "C" -> C
-         | "C#" -> Cs
-         | "D" -> D
-         | "D#" -> Ds
-         | "E" -> E
-         | "F" -> F
-         | "F#" -> Fs
-         | "G" -> G
-         | "G#" -> Gs
-         | "A" -> A
-         | "A#" -> As
-         | "B" -> B
-         | _ -> raise (UnknownKey h)
-       in
-       match (note, oct) with
-       | C, SubContra -> activate_audio_player (frequency_from_name "C0")
-       | Cs, SubContra -> activate_audio_player (frequency_from_name "C#0")
-       | D, SubContra -> activate_audio_player (frequency_from_name "D0")
-       | Ds, SubContra -> activate_audio_player (frequency_from_name "D#0")
-       | E, SubContra -> activate_audio_player (frequency_from_name "E0")
-       | F, SubContra -> activate_audio_player (frequency_from_name "F0")
-       | Fs, SubContra -> activate_audio_player (frequency_from_name "F#0")
-       | G, SubContra -> activate_audio_player (frequency_from_name "G0")
-       | Gs, SubContra -> activate_audio_player (frequency_from_name "G#0")
-       | A, SubContra -> activate_audio_player (frequency_from_name "A0")
-       | As, SubContra -> activate_audio_player (frequency_from_name "A#0")
-       | B, SubContra -> activate_audio_player (frequency_from_name "B0")
-       | C, Contra -> activate_audio_player (frequency_from_name "C1")
-       | Cs, Contra -> activate_audio_player (frequency_from_name "C#1")
-       | D, Contra -> activate_audio_player (frequency_from_name "D1")
-       | Ds, Contra -> activate_audio_player (frequency_from_name "D#1")
-       | E, Contra -> activate_audio_player (frequency_from_name "E1")
-       | F, Contra -> activate_audio_player (frequency_from_name "F1")
-       | Fs, Contra -> activate_audio_player (frequency_from_name "F#1")
-       | G, Contra -> activate_audio_player (frequency_from_name "G1")
-       | Gs, Contra -> activate_audio_player (frequency_from_name "G#1")
-       | A, Contra -> activate_audio_player (frequency_from_name "A1")
-       | As, Contra -> activate_audio_player (frequency_from_name "A#1")
-       | B, Contra -> activate_audio_player (frequency_from_name "B1")
-       | C, Great -> activate_audio_player (frequency_from_name "C2")
-       | Cs, Great -> activate_audio_player (frequency_from_name "C#2")
-       | D, Great -> activate_audio_player (frequency_from_name "D2")
-       | Ds, Great -> activate_audio_player (frequency_from_name "D#2")
-       | E, Great -> activate_audio_player (frequency_from_name "E2")
-       | F, Great -> activate_audio_player (frequency_from_name "F2")
-       | Fs, Great -> activate_audio_player (frequency_from_name "F#2")
-       | G, Great -> activate_audio_player (frequency_from_name "G2")
-       | Gs, Great -> activate_audio_player (frequency_from_name "G#2")
-       | A, Great -> activate_audio_player (frequency_from_name "A2")
-       | As, Great -> activate_audio_player (frequency_from_name "A#2")
-       | B, Great -> activate_audio_player (frequency_from_name "B2")
-       | C, Small -> activate_audio_player (frequency_from_name "C3")
-       | Cs, Small -> activate_audio_player (frequency_from_name "C#3")
-       | D, Small -> activate_audio_player (frequency_from_name "D3")
-       | Ds, Small -> activate_audio_player (frequency_from_name "D#3")
-       | E, Small -> activate_audio_player (frequency_from_name "E3")
-       | F, Small -> activate_audio_player (frequency_from_name "F3")
-       | Fs, Small -> activate_audio_player (frequency_from_name "F#3")
-       | G, Small -> activate_audio_player (frequency_from_name "G3")
-       | Gs, Small -> activate_audio_player (frequency_from_name "G#3")
-       | A, Small -> activate_audio_player (frequency_from_name "A3")
-       | As, Small -> activate_audio_player (frequency_from_name "A#3")
-       | B, Small -> activate_audio_player (frequency_from_name "B3")
-       | C, OneLine -> activate_audio_player (frequency_from_name "C4")
-       | Cs, OneLine -> activate_audio_player (frequency_from_name "C#4")
-       | D, OneLine -> activate_audio_player (frequency_from_name "D4")
-       | Ds, OneLine -> activate_audio_player (frequency_from_name "D#4")
-       | E, OneLine -> activate_audio_player (frequency_from_name "E4")
-       | F, OneLine -> activate_audio_player (frequency_from_name "F4")
-       | Fs, OneLine -> activate_audio_player (frequency_from_name "F#4")
-       | G, OneLine -> activate_audio_player (frequency_from_name "G4")
-       | Gs, OneLine -> activate_audio_player (frequency_from_name "G#4")
-       | A, OneLine -> activate_audio_player (frequency_from_name "A4")
-       | As, OneLine -> activate_audio_player (frequency_from_name "A#4")
-       | B, OneLine -> activate_audio_player (frequency_from_name "B4")
-       | C, TwoLine -> activate_audio_player (frequency_from_name "C5")
-       | Cs, TwoLine -> activate_audio_player (frequency_from_name "C#5")
-       | D, TwoLine -> activate_audio_player (frequency_from_name "D5")
-       | Ds, TwoLine -> activate_audio_player (frequency_from_name "D#5")
-       | E, TwoLine -> activate_audio_player (frequency_from_name "E5")
-       | F, TwoLine -> activate_audio_player (frequency_from_name "F5")
-       | Fs, TwoLine -> activate_audio_player (frequency_from_name "F#5")
-       | G, TwoLine -> activate_audio_player (frequency_from_name "G5")
-       | Gs, TwoLine -> activate_audio_player (frequency_from_name "G#5")
-       | A, TwoLine -> activate_audio_player (frequency_from_name "A5")
-       | As, TwoLine -> activate_audio_player (frequency_from_name "A#5")
-       | B, TwoLine -> activate_audio_player (frequency_from_name "B5")
-       | C, ThreeLine -> activate_audio_player (frequency_from_name "C6")
-       | Cs, ThreeLine -> activate_audio_player (frequency_from_name "C#6")
-       | D, ThreeLine -> activate_audio_player (frequency_from_name "D6")
-       | Ds, ThreeLine -> activate_audio_player (frequency_from_name "D#6")
-       | E, ThreeLine -> activate_audio_player (frequency_from_name "E6")
-       | F, ThreeLine -> activate_audio_player (frequency_from_name "F6")
-       | Fs, ThreeLine -> activate_audio_player (frequency_from_name "F#6")
-       | G, ThreeLine -> activate_audio_player (frequency_from_name "G6")
-       | Gs, ThreeLine -> activate_audio_player (frequency_from_name "G#6")
-       | A, ThreeLine -> activate_audio_player (frequency_from_name "A6")
-       | As, ThreeLine -> activate_audio_player (frequency_from_name "A#6")
-       | B, ThreeLine -> activate_audio_player (frequency_from_name "B6")
-       | C, FourLine -> activate_audio_player (frequency_from_name "C7")
-       | Cs, FourLine -> activate_audio_player (frequency_from_name "C#7")
-       | D, FourLine -> activate_audio_player (frequency_from_name "D7")
-       | Ds, FourLine -> activate_audio_player (frequency_from_name "D#7")
-       | E, FourLine -> activate_audio_player (frequency_from_name "E7")
-       | F, FourLine -> activate_audio_player (frequency_from_name "F7")
-       | Fs, FourLine -> activate_audio_player (frequency_from_name "F#7")
-       | G, FourLine -> activate_audio_player (frequency_from_name "G7")
-       | Gs, FourLine -> activate_audio_player (frequency_from_name "G#7")
-       | A, FourLine -> activate_audio_player (frequency_from_name "A7")
-       | As, FourLine -> activate_audio_player (frequency_from_name "A#7")
-       | B, FourLine -> activate_audio_player (frequency_from_name "B7")
-       | C, FiveLine -> activate_audio_player (frequency_from_name "C8")
-       | Cs, FiveLine -> activate_audio_player (frequency_from_name "C#8")
-       | D, FiveLine -> activate_audio_player (frequency_from_name "D8")
-       | Ds, FiveLine -> activate_audio_player (frequency_from_name "D#8")
-       | E, FiveLine -> activate_audio_player (frequency_from_name "E8")
-       | F, FiveLine -> activate_audio_player (frequency_from_name "F8")
-       | Fs, FiveLine -> activate_audio_player (frequency_from_name "F#8")
-       | G, FiveLine -> activate_audio_player (frequency_from_name "G8")
-       | Gs, FiveLine -> activate_audio_player (frequency_from_name "G#8")
-       | A, FiveLine -> activate_audio_player (frequency_from_name "A8")
-       | As, FiveLine -> activate_audio_player (frequency_from_name "A#8")
-       | B, FiveLine -> activate_audio_player (frequency_from_name "B8"));
+      activate_audio_player (frequency_from_name (h ^ oct));
+      (* (let note = match h with | "C" -> C "C" | "C#" -> Cs "C#" | "D" -> D
+         "D" | "D#" -> Ds "D#" | "E" -> E "E" | "F" -> F "F" | "F#" -> Fs "F#" |
+         "G" -> G "G" | "G#" -> Gs "G#" | "A" -> A "A" | "A#" -> As "A#" | "B"
+         -> B "B" | _ -> raise (UnknownKey h) in *)
+      (* match (note, oct) with *)
+      (* | C, SubContra -> activate_audio_player (frequency_from_name "C0") |
+         Cs, SubContra -> activate_audio_player (frequency_from_name "C#0") | D,
+         SubContra -> activate_audio_player (frequency_from_name "D0") | Ds,
+         SubContra -> activate_audio_player (frequency_from_name "D#0") | E,
+         SubContra -> activate_audio_player (frequency_from_name "E0") | F,
+         SubContra -> activate_audio_player (frequency_from_name "F0") | Fs,
+         SubContra -> activate_audio_player (frequency_from_name "F#0") | G,
+         SubContra -> activate_audio_player (frequency_from_name "G0") | Gs,
+         SubContra -> activate_audio_player (frequency_from_name "G#0") | A,
+         SubContra -> activate_audio_player (frequency_from_name "A0") | As,
+         SubContra -> activate_audio_player (frequency_from_name "A#0") | B,
+         SubContra -> activate_audio_player (frequency_from_name "B0") | C,
+         Contra -> activate_audio_player (frequency_from_name "C1") | Cs, Contra
+         -> activate_audio_player (frequency_from_name "C#1") | D, Contra ->
+         activate_audio_player (frequency_from_name "D1") | Ds, Contra ->
+         activate_audio_player (frequency_from_name "D#1") | E, Contra ->
+         activate_audio_player (frequency_from_name "E1") | F, Contra ->
+         activate_audio_player (frequency_from_name "F1") | Fs, Contra ->
+         activate_audio_player (frequency_from_name "F#1") | G, Contra ->
+         activate_audio_player (frequency_from_name "G1") | Gs, Contra ->
+         activate_audio_player (frequency_from_name "G#1") | A, Contra ->
+         activate_audio_player (frequency_from_name "A1") | As, Contra ->
+         activate_audio_player (frequency_from_name "A#1") | B, Contra ->
+         activate_audio_player (frequency_from_name "B1") | C, Great ->
+         activate_audio_player (frequency_from_name "C2") | Cs, Great ->
+         activate_audio_player (frequency_from_name "C#2") | D, Great ->
+         activate_audio_player (frequency_from_name "D2") | Ds, Great ->
+         activate_audio_player (frequency_from_name "D#2") | E, Great ->
+         activate_audio_player (frequency_from_name "E2") | F, Great ->
+         activate_audio_player (frequency_from_name "F2") | Fs, Great ->
+         activate_audio_player (frequency_from_name "F#2") | G, Great ->
+         activate_audio_player (frequency_from_name "G2") | Gs, Great ->
+         activate_audio_player (frequency_from_name "G#2") | A, Great ->
+         activate_audio_player (frequency_from_name "A2") | As, Great ->
+         activate_audio_player (frequency_from_name "A#2") | B, Great ->
+         activate_audio_player (frequency_from_name "B2") | C, Small ->
+         activate_audio_player (frequency_from_name "C3") | Cs, Small ->
+         activate_audio_player (frequency_from_name "C#3") | D, Small ->
+         activate_audio_player (frequency_from_name "D3") | Ds, Small ->
+         activate_audio_player (frequency_from_name "D#3") | E, Small ->
+         activate_audio_player (frequency_from_name "E3") | F, Small ->
+         activate_audio_player (frequency_from_name "F3") | Fs, Small ->
+         activate_audio_player (frequency_from_name "F#3") | G, Small ->
+         activate_audio_player (frequency_from_name "G3") | Gs, Small ->
+         activate_audio_player (frequency_from_name "G#3") | A, Small ->
+         activate_audio_player (frequency_from_name "A3") | As, Small ->
+         activate_audio_player (frequency_from_name "A#3") | B, Small ->
+         activate_audio_player (frequency_from_name "B3") | C, OneLine ->
+         activate_audio_player (frequency_from_name "C4") | Cs, OneLine ->
+         activate_audio_player (frequency_from_name "C#4") | D, OneLine ->
+         activate_audio_player (frequency_from_name "D4") | Ds, OneLine ->
+         activate_audio_player (frequency_from_name "D#4") | E, OneLine ->
+         activate_audio_player (frequency_from_name "E4") | F, OneLine ->
+         activate_audio_player (frequency_from_name "F4") | Fs, OneLine ->
+         activate_audio_player (frequency_from_name "F#4") | G, OneLine ->
+         activate_audio_player (frequency_from_name "G4") | Gs, OneLine ->
+         activate_audio_player (frequency_from_name "G#4") | A, OneLine ->
+         activate_audio_player (frequency_from_name "A4") | As, OneLine ->
+         activate_audio_player (frequency_from_name "A#4") | B, OneLine ->
+         activate_audio_player (frequency_from_name "B4") | C, TwoLine ->
+         activate_audio_player (frequency_from_name "C5") | Cs, TwoLine ->
+         activate_audio_player (frequency_from_name "C#5") | D, TwoLine ->
+         activate_audio_player (frequency_from_name "D5") | Ds, TwoLine ->
+         activate_audio_player (frequency_from_name "D#5") | E, TwoLine ->
+         activate_audio_player (frequency_from_name "E5") | F, TwoLine ->
+         activate_audio_player (frequency_from_name "F5") | Fs, TwoLine ->
+         activate_audio_player (frequency_from_name "F#5") | G, TwoLine ->
+         activate_audio_player (frequency_from_name "G5") | Gs, TwoLine ->
+         activate_audio_player (frequency_from_name "G#5") | A, TwoLine ->
+         activate_audio_player (frequency_from_name "A5") | As, TwoLine ->
+         activate_audio_player (frequency_from_name "A#5") | B, TwoLine ->
+         activate_audio_player (frequency_from_name "B5") | C, ThreeLine ->
+         activate_audio_player (frequency_from_name "C6") | Cs, ThreeLine ->
+         activate_audio_player (frequency_from_name "C#6") | D, ThreeLine ->
+         activate_audio_player (frequency_from_name "D6") | Ds, ThreeLine ->
+         activate_audio_player (frequency_from_name "D#6") | E, ThreeLine ->
+         activate_audio_player (frequency_from_name "E6") | F, ThreeLine ->
+         activate_audio_player (frequency_from_name "F6") | Fs, ThreeLine ->
+         activate_audio_player (frequency_from_name "F#6") | G, ThreeLine ->
+         activate_audio_player (frequency_from_name "G6") | Gs, ThreeLine ->
+         activate_audio_player (frequency_from_name "G#6") | A, ThreeLine ->
+         activate_audio_player (frequency_from_name "A6") | As, ThreeLine ->
+         activate_audio_player (frequency_from_name "A#6") | B, ThreeLine ->
+         activate_audio_player (frequency_from_name "B6") | C, FourLine ->
+         activate_audio_player (frequency_from_name "C7") | Cs, FourLine ->
+         activate_audio_player (frequency_from_name "C#7") | D, FourLine ->
+         activate_audio_player (frequency_from_name "D7") | Ds, FourLine ->
+         activate_audio_player (frequency_from_name "D#7") | E, FourLine ->
+         activate_audio_player (frequency_from_name "E7") | F, FourLine ->
+         activate_audio_player (frequency_from_name "F7") | Fs, FourLine ->
+         activate_audio_player (frequency_from_name "F#7") | G, FourLine ->
+         activate_audio_player (frequency_from_name "G7") | Gs, FourLine ->
+         activate_audio_player (frequency_from_name "G#7") | A, FourLine ->
+         activate_audio_player (frequency_from_name "A7") | As, FourLine ->
+         activate_audio_player (frequency_from_name "A#7") | B, FourLine ->
+         activate_audio_player (frequency_from_name "B7") | C, FiveLine ->
+         activate_audio_player (frequency_from_name "C8") | Cs, FiveLine ->
+         activate_audio_player (frequency_from_name "C#8") | D, FiveLine ->
+         activate_audio_player (frequency_from_name "D8") | Ds, FiveLine ->
+         activate_audio_player (frequency_from_name "D#8") | E, FiveLine ->
+         activate_audio_player (frequency_from_name "E8") | F, FiveLine ->
+         activate_audio_player (frequency_from_name "F8") | Fs, FiveLine ->
+         activate_audio_player (frequency_from_name "F#8") | G, FiveLine ->
+         activate_audio_player (frequency_from_name "G8") | Gs, FiveLine ->
+         activate_audio_player (frequency_from_name "G#8") | A, FiveLine ->
+         activate_audio_player (frequency_from_name "A8") | As, FiveLine ->
+         activate_audio_player (frequency_from_name "A#8") | B, FiveLine ->
+         activate_audio_player (frequency_from_name "B8")); *)
       play_melody t octave
