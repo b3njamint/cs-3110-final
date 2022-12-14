@@ -348,16 +348,6 @@ let play_melody_from_seed (encoded_seed : string) =
     let _ = play_melody melody octave instrument in
     exit 0
 
-(* let rec rec_get_valid_scale_name (name : string) (key : string) : string = if
-   not (is_valid_scale_name name key) then ( ANSITerminal.print_string [
-   ANSITerminal.red ] ("\nEntered tonality name: " ^ name ^ " is not valid
-   tonality name.\n"); ANSITerminal.print_string [ ANSITerminal.blue ] "\n\
-   Please enter tonality of melody. Options: major; minor; minor_harmonic; \
-   dorian; lydian; mixolydian; phrygian; aeolian; ionian; locrian.\n";
-   print_string "\n> "; match read_line () with | exception End_of_file ->
-   rec_get_valid_scale_name "" key | entered_name -> rec_get_valid_scale_name
-   (String.lowercase_ascii (String.trim entered_name)) key) else name *)
-
 let rec rec_get_valid_seed (input : string) =
   ANSITerminal.print_string [ ANSITerminal.red ]
     ("\nEntered seed: " ^ input ^ " is not valid seed.\n");
