@@ -30,6 +30,9 @@ exception BadIndex of int
 (** Raised when an invalid index is encountered. It carries the value of the
     invalid index. *)
 
+exception InvalidEncoding
+(** Raised when an attempt to decode an invalid encoding is made. *)
+
 val piano_from_json : Yojson.Basic.t -> piano
 (** [piano_from_json j] is the notes that [j] contains. Requires: [j] is a valid
     JSON piano representation. *)
@@ -81,6 +84,11 @@ val encode_seed : string -> string -> string -> sounds -> seed -> int list
     [i], and note seed [s], and returns a list of integers representing an
     encoded seed which can be used to replicate the exact melody from the input
     configuration *)
+
+val decode_seed : string -> string * string * string * sounds * int list
+(** [decode_seed e] uses the same schema used to encode seeds to decode [e] into
+    a tuple of key , tonality, octave, instrument, and note seed. Raises
+    InvalidEncoding if encoding cannot be decoded. *)
 
 val play_melody : string list -> string -> sounds -> unit
 (** [play_melody m i o] plays melody [m] in octave [o] with instrument [i] using

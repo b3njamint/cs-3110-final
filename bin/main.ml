@@ -25,8 +25,6 @@ type option =
   | Generate
   | PlaySeed
 
-exception Invalid_encoding
-
 let piano = piano_from_json (Yojson.Basic.from_file piano_file)
 
 let scale (name : string) (key : string) =
@@ -206,7 +204,7 @@ let rec print_music (delim : string) = function
       print_music delim t
 
 let play_melody_from_seed (encoded_seed : string) =
-  if String.length encoded_seed < 15 then raise Invalid_encoding
+  if String.length encoded_seed < 15 then raise InvalidEncoding
   else
     let encoded_key = [ encoded_seed.[0]; encoded_seed.[1] ] in
     let key =
@@ -223,7 +221,7 @@ let play_melody_from_seed (encoded_seed : string) =
       | [ '0'; '9' ] -> "A"
       | [ '1'; '0' ] -> "A#"
       | [ '1'; '1' ] -> "B"
-      | _ -> raise Invalid_encoding
+      | _ -> raise InvalidEncoding
     in
     let tonality =
       match encoded_seed.[2] with
@@ -237,7 +235,7 @@ let play_melody_from_seed (encoded_seed : string) =
       | '7' -> "aeolian"
       | '8' -> "ionian"
       | '9' -> "locrian"
-      | _ -> raise Invalid_encoding
+      | _ -> raise InvalidEncoding
     in
     let octave =
       match encoded_seed.[3] with
@@ -250,7 +248,7 @@ let play_melody_from_seed (encoded_seed : string) =
       | '6' -> "3 line"
       | '7' -> "4 line"
       | '8' -> "5 line"
-      | _ -> raise Invalid_encoding
+      | _ -> raise InvalidEncoding
     in
     let instrument =
       match encoded_seed.[4] with
@@ -258,7 +256,7 @@ let play_melody_from_seed (encoded_seed : string) =
       | '1' -> Square
       | '2' -> Saw
       | '3' -> Triangle
-      | _ -> raise Invalid_encoding
+      | _ -> raise InvalidEncoding
     in
     let seed_length = String.length encoded_seed - 5 in
     let str_seed = String.sub encoded_seed 5 seed_length in
@@ -304,7 +302,7 @@ let rec rec_get_valid_seed (input : string) =
   | exception End_of_file -> rec_get_valid_seed ""
   | entered_seed -> (
       try play_melody_from_seed entered_seed
-      with Invalid_encoding -> rec_get_valid_seed entered_seed)
+      with InvalidEncoding -> rec_get_valid_seed entered_seed)
 
 (** [main] asks user for inputs in terminal and calls functions to create melody
     based on inputs. *)
@@ -422,7 +420,7 @@ let main () =
         | exception End_of_file -> rec_get_valid_seed ""
         | entered_string -> (
             try play_melody_from_seed entered_string
-            with Invalid_encoding -> rec_get_valid_seed entered_string)
+            with InvalidEncoding -> rec_get_valid_seed entered_string)
       in
       exit 0
 
