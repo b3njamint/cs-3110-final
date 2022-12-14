@@ -67,7 +67,9 @@ let rec rec_get_valid_octave (octave : string) : string =
     match read_line () with
     | exception End_of_file -> rec_get_valid_octave ""
     | entered_octave -> (
-        try rec_get_valid_octave entered_octave
+        try
+          entered_octave |> String.trim |> String.lowercase_ascii
+          |> rec_get_valid_octave
         with _ ->
           entered_octave |> String.trim |> String.lowercase_ascii
           |> rec_get_valid_octave))
@@ -129,7 +131,9 @@ let get_valid_scale_name (key : string) =
     "\n\
      Please enter tonality of melody. \n\
      Options: major; minor; minor_harmonic; dorian; lydian; mixolydian; \
-     phrygian; aeolian; ionian; locrian.\n";
+     phrygian; aeolian; ionian; locrian.\n\
+     The first few are the most popular today, and the latter ones are used in \
+     medival music.\n";
   print_string "\n> ";
   match read_line () with
   | exception End_of_file -> rec_get_valid_scale_name "" key
@@ -298,7 +302,9 @@ let main () =
           "\n\
            Please enter octave of melody: \n\
            Options: sub contra, contra, great, small, 1 line, 2 line, 3 line, \
-           4 line, 5 line\n";
+           4 line, 5 line\n\
+           Each one represents an octave on a standard piano. We recommend \
+           something near the middle.\n";
         print_string "\n> ";
         match read_line () with
         | exception End_of_file -> rec_get_valid_octave ""
