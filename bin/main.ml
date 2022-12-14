@@ -137,16 +137,14 @@ let get_valid_scale (key : string) =
   let scale_name = get_valid_scale_name key in
   match scale scale_name key with None -> exit 1 | Some s -> s
 
-(** TODO!!!! [is_valid_instrument instrument] calls [get_valid_scale_name key] to get a 
-    [scale_name] and then gets scale of [scale_name] by calling 
-    [scale scale_name key]. *)
+(** [is_valid_instrument instrument] checks if the user instrument input is valid. *)
 let is_valid_instrument (instrument : string) =
   match instrument |> String.trim |> String.lowercase_ascii with
   | "sine" | "square" | "saw" | "triangle" -> true
   | _ -> false
 
-(** TODO!!! [rec_get_valid_scale_name name key] continues to ask for [name] until it is
-    valid. A valid name must cause [is_valid_scale_name name key] to be true. *)
+(** [rec_get_valid_instrument name key] continues to ask for [instrument] until it is
+    valid. A valid instrument must cause [is_valid_instrument instrument] to be true. *)
 let rec rec_get_valid_instrument (instrument : string) : sounds =
   if not (is_valid_instrument instrument) then (
     ANSITerminal.print_string [ ANSITerminal.red ]
