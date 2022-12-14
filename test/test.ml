@@ -185,12 +185,6 @@ let music_json_tests =
 
 let music_tests =
   [
-    decode_seed_exception_test "invalid seed length" "00";
-    decode_seed_exception_test "non-integer seed"
-      "asdfksdojfiahsudfuisdfskdfaksjdfosifjd";
-    decode_seed_exception_test "invalid encoding" "999999999999999999";
-    decode_seed_exception_test "invalid seed"
-      "000001347829867086097806798967879068";
     create_notes_test "c major" piano
       { key = "C"; steps = major }
       [ "C"; "D"; "E"; "F"; "G"; "A"; "B" ];
@@ -1145,7 +1139,34 @@ let music_tests =
         ] );
   ]
 
+let music_exception_tests =
+  [
+    decode_seed_exception_test
+      "invalid seed length of '' because it does not have the 5 necessary \
+       metadata values"
+      "";
+    decode_seed_exception_test
+      "invalid seed length of 9245 because it does not have the 5 necessary \
+       metadata values"
+      "9245";
+    decode_seed_exception_test
+      "invalid seed length of 92450124124295 because it has the 5 necessary \
+       metadata values, but too few subsequent notes"
+      "92450124124295";
+    decode_seed_exception_test
+      "non-integer seed of asdfksdojfiahsudfuisdfskdfaksjdfosifjd"
+      "asdfksdojfiahsudfuisdfskdfaksjdfosifjd";
+    decode_seed_exception_test
+      "invalid encoding of 999999999999999999 because of some of the metadata \
+       and all the notes are all out of bounds"
+      "999999999999999999";
+    decode_seed_exception_test
+      "invalid seed becayse some of the notes are out of bounds"
+      "000001347829867086097806798967879068";
+  ]
+
 let suite =
-  "test suite for A2" >::: List.flatten [ music_tests; music_json_tests ]
+  "test suite for A2"
+  >::: List.flatten [ music_json_tests; music_tests; music_exception_tests ]
 
 let _ = run_test_tt_main suite
