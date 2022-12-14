@@ -259,6 +259,8 @@ let create_melody_note_sheet (notes : notes) (melody : string list) : string =
   ANSITerminal.print_string [ ANSITerminal.Bold ] (line ^ "\n");
   line ^ note_lines ^ line
 
+[@@@coverage off]
+
 let activate_audio_player (frequency : float) =
   let channels = 2 in
   let sample_rate = 44100 in
@@ -277,6 +279,8 @@ let activate_audio_player (frequency : float) =
   done;
   wav#close;
   ao#close
+
+[@@@coverage on]
 
 let rec play_melody (melody : string list) (octave : string) : unit =
   let oct =
